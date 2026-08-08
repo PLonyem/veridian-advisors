@@ -1,0 +1,258 @@
+/* ==========================================================================
+   Veridian Global Advisors — How It Works Page
+   Builds on css/style.css (design system) and css/home.css (shared
+   .gold-divider, .section-heading, .page-hero*, .cta-band*).
+   Contents: 1. Process Timeline (nav)  2. Phase List  3. Speed Table
+   4. Don't-Do List  5. Badge
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Process Timeline — clickable SVG-connected nav of the 4 phases
+   -------------------------------------------------------------------------- */
+.process-timeline {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  max-width: 880px;
+  margin: var(--spacing-xl) auto 0;
+}
+
+.process-timeline__connector {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  z-index: 0;
+  overflow: visible;
+}
+
+.process-timeline__marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+.process-timeline__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-gray-300);
+  color: var(--color-gray-500);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.process-timeline__label {
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.process-timeline__marker:hover .process-timeline__number,
+.process-timeline__marker:focus-visible .process-timeline__number,
+.process-timeline__marker.is-active .process-timeline__number {
+  border-color: var(--color-gold);
+  background-color: var(--color-navy);
+  color: var(--color-gold);
+}
+
+.process-timeline__marker.is-active {
+  color: var(--color-navy);
+}
+
+@media (max-width: 767px) {
+  .process-timeline__label {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Phase List — vertical stepper with connecting line
+   -------------------------------------------------------------------------- */
+.phase-list {
+  display: grid;
+  gap: var(--spacing-xxl);
+}
+
+.phase-card {
+  position: relative;
+  display: grid;
+  /* minmax(0, 1fr): a bare 1fr's implicit minimum is its content's
+     max-content width, which forces this column (and the whole page) wider
+     than the viewport on mobile once content like the tier breakdown or a
+     long description is present. See the same fix on .intake__inner. */
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--spacing-lg);
+  scroll-margin-top: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-smooth), background-color var(--transition-smooth);
+}
+
+.phase-card.is-jumped-to {
+  background-color: rgba(197, 160, 89, 0.08);
+  box-shadow: 0 0 0 2px var(--color-gold);
+}
+
+.phase-card__marker {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.phase-card__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-navy);
+  border: 2px solid var(--color-gold);
+  color: var(--color-gold);
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.phase-card:not(:last-child) .phase-card__marker::after {
+  content: '';
+  position: absolute;
+  top: 64px;
+  bottom: calc(-1 * var(--spacing-xxl));
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background-color: var(--color-gold-subtle);
+}
+
+.phase-card__icon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-gold);
+  margin-bottom: var(--spacing-sm);
+}
+
+.phase-card__duration {
+  display: inline-block;
+  margin-left: var(--spacing-md);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-gold-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+}
+
+.phase-card__title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.phase-card__title-row h3 {
+  margin: 0;
+}
+
+.phase-card__body {
+  margin-top: var(--spacing-sm);
+  max-width: 62ch;
+}
+
+.phase-card__tiers {
+  display: grid;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  max-width: 480px;
+}
+
+.phase-card__tier {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xs) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-off-white);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-small);
+}
+
+.phase-card__tier--featured {
+  background-color: rgba(197, 160, 89, 0.1);
+  border: 1px solid var(--color-gold);
+}
+
+/* --------------------------------------------------------------------------
+   3. Speed Comparison Table
+   -------------------------------------------------------------------------- */
+.speed-table tr.is-featured td {
+  background-color: rgba(197, 160, 89, 0.07);
+  border-top: 2px solid var(--color-gold);
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.speed-table tr.is-featured td:first-child {
+  border-left: 2px solid var(--color-gold);
+}
+
+.speed-table tr.is-featured td:last-child {
+  border-right: 2px solid var(--color-gold);
+}
+
+/* --------------------------------------------------------------------------
+   4. "What We Don't Do"
+   -------------------------------------------------------------------------- */
+.dont-do-list {
+  display: grid;
+  gap: var(--spacing-md);
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.dont-do-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.dont-do-list li svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  color: var(--color-gray-500);
+}
+
+/* --------------------------------------------------------------------------
+   5. Guaranteed Badge
+   -------------------------------------------------------------------------- */
+.badge--guaranteed {
+  display: inline-block;
+  background-color: var(--color-gold);
+  color: var(--color-navy);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}

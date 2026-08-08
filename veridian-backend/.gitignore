@@ -1,0 +1,11 @@
+node_modules/
+.env
+*.db
+backups/*
+!backups/.gitkeep
+*.log
+data/
+src/documents/*.pdf
+npm-debug.log*
+.DS_Store
+Thumbs.db

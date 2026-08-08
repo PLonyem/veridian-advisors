@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0F1A2E">
+
+  <title>Veridian Global Advisors – Premium U.S. Immigration Document Preparation</title>
+  <meta name="description" content="Private advisory for HNWIs. Compress 12 months of immigration paperwork into weeks. Foundation, Accelerated, Executive tiers.">
+
+  <!--
+    TODO before launch:
+    - Replace https://www.veridianglobal.com/ below with the real production domain.
+    - Add the real Open Graph / Twitter image at /assets/images/og-cover.jpg (recommended 1200x630).
+  -->
+  <link rel="canonical" href="https://www.veridianglobal.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Veridian Global Advisors">
+  <meta property="og:title" content="Veridian Global Advisors – Premium U.S. Immigration Document Preparation">
+  <meta property="og:description" content="Private advisory for HNWIs. Compress 12 months of immigration paperwork into weeks. Foundation, Accelerated, Executive tiers.">
+  <meta property="og:url" content="https://www.veridianglobal.com/">
+  <meta property="og:image" content="https://www.veridianglobal.com/assets/images/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Veridian Global Advisors">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Veridian Global Advisors – Premium U.S. Immigration Document Preparation">
+  <meta name="twitter:description" content="Private advisory for HNWIs. Compress 12 months of immigration paperwork into weeks. Foundation, Accelerated, Executive tiers.">
+  <meta name="twitter:image" content="https://www.veridianglobal.com/assets/images/og-cover.jpg">
+
+  <!-- Favicon: inline navy/gold "V" mark, no external asset needed -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230F1A2E'/%3E%3Ctext x='50' y='70' font-size='58' font-family='Georgia,serif' fill='%23C5A059' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts: preconnect first so the font files download in parallel with everything else -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!--
+    Google Analytics 4 + Core Web Vitals reporting (see js/analytics.js).
+    PLACEHOLDER measurement ID (G-XXXXXXXXXX) - this will not actually send
+    any data until it's replaced with a real GA4 property ID.
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!--
+    Critical CSS: a deliberately small, exact subset of style.css's tokens/
+    reset/body/heading rules (same values, not approximated) so first paint
+    isn't unstyled system-font black-on-white while the full stylesheets
+    load. Keep in sync with style.css's :root/reset/body if those change.
+  -->
+  <style>
+    :root{--color-navy:#0F1A2E;--color-gold:#C5A059;--color-white:#FFFFFF;--color-gray-900:#1A1816;--font-serif:'Playfair Display',Georgia,serif;--font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+    body{font-family:var(--font-sans);line-height:1.7;color:var(--color-gray-900);background-color:var(--color-white);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    h1,h2,h3,h4{font-family:var(--font-serif);color:var(--color-navy)}
+  </style>
+
+  <!-- Non-blocking stylesheet load: preload (parallel download, no render
+       block) then swap to rel=stylesheet once fetched. <noscript> covers
+       browsers/crawlers that don't run the onload handler. -->
+  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="css/home.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+  </noscript>
+
+  <!--
+    JSON-LD below is structural scaffolding, not real testimonials.
+    The aggregateRating and review entries are clearly-marked placeholders.
+    Google's structured-data guidelines require review markup to reflect
+    genuine, verifiable reviews - replace or remove this block before launch
+    rather than shipping placeholder ratings to production.
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Veridian Global Advisors",
+    "description": "Private document preparation advisory for high-net-worth individuals pursuing U.S. residency.",
+    "url": "https://www.veridianglobal.com/",
+    "image": "https://www.veridianglobal.com/assets/images/og-cover.jpg",
+    "priceRange": "$$$$",
+    "areaServed": "Worldwide",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "3"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "author": { "@type": "Person", "name": "PLACEHOLDER" },
+        "reviewBody": "PLACEHOLDER REVIEW - replace with a real, verifiable client testimonial before launch."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "author": { "@type": "Person", "name": "PLACEHOLDER" },
+        "reviewBody": "PLACEHOLDER REVIEW - replace with a real, verifiable client testimonial before launch."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "author": { "@type": "Person", "name": "PLACEHOLDER" },
+        "reviewBody": "PLACEHOLDER REVIEW - replace with a real, verifiable client testimonial before launch."
+      }
+    ]
+  }
+  </script>
+
+  <!--
+    Organization schema deliberately omits `logo` and `sameAs`: no real logo
+    asset or verified social profile URLs exist yet (the footer's LinkedIn/
+    Twitter links are still "#" placeholders - see the footer). Add both once
+    they're real; a placeholder logo path or an unverified sameAs URL would
+    be a false structured-data claim, same reasoning as the reviews above.
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Veridian Global Advisors",
+    "url": "https://www.veridianglobal.com/",
+    "email": "hello@veridianglobal.com",
+    "description": "Private document preparation advisory for high-net-worth individuals pursuing U.S. residency."
+  }
+  </script>
+</head>
+<body class="page-transition">
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__bar"></div></div>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ==================== Header ==================== -->
+  <header class="nav container">
+    <a href="/" class="nav__brand" aria-label="Veridian Global Advisors — home">
+      Veridian <span class="nav__brand-sans">Global Advisors</span>
+    </a>
+
+    <nav id="primary-nav" class="nav__menu is-mobile" aria-label="Primary">
+      <a href="/how-it-works.html" class="nav__link">How It Works</a>
+      <a href="#pricing" class="nav__link">Pricing</a>
+      <a href="/faq.html" class="nav__link">FAQ</a>
+      <a href="#start-review" class="btn btn--primary btn--sm">Start Review</a>
+    </nav>
+
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ==================== Hero ==================== -->
+    <section class="hero" id="hero">
+      <svg class="hero__bg-pattern" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="1220" cy="140" r="260" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+        <circle cx="1220" cy="140" r="180" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+        <circle cx="90" cy="760" r="200" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+        <path d="M-40 640 L1480 460" stroke="currentColor" stroke-width="0.75" opacity="0.25"/>
+        <path d="M-40 720 L1480 560" stroke="currentColor" stroke-width="0.75" opacity="0.2"/>
+      </svg>
+
+      <div class="container hero__inner">
+        <div class="hero__content reveal">
+          <span class="eyebrow">Private Advisory for HNWIs</span>
+          <h1 class="hero__headline">Your Path to U.S. Residency Starts Here — <span class="text-gradient">On Your Timeline</span></h1>
+          <p class="lede hero__subhead">Private document preparation for high-net-worth individuals. We compress 12–18 months of paperwork into weeks.</p>
+
+          <ul class="hero__checklist">
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Dedicated senior advisor, not a call center</span>
+            </li>
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Document preparation compressed into weeks, not months</span>
+            </li>
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Bank-grade confidentiality on every engagement</span>
+            </li>
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Attorney-ready packaging, prepared to your immigration counsel's standard</span>
+            </li>
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Transparent, tiered pricing agreed upfront</span>
+            </li>
+            <li>
+              <svg class="hero__check-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6 10.3l2.5 2.5L14 7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Works alongside your existing legal counsel</span>
+            </li>
+          </ul>
+
+          <div class="hero__cta">
+            <a href="#start-review" class="btn btn--primary btn--lg">Start Your Confidential Review</a>
+          </div>
+          <p class="text-small hero__fineprint">Private advisory services. Not a law firm. No guarantees.</p>
+        </div>
+
+        <div class="hero__media reveal reveal--delay-1">
+          <div class="hero__media-placeholder">
+            <svg class="hero__media-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.5"/><path d="M10 8.3l6 3.7-6 3.7v-7.4Z" fill="currentColor"/></svg>
+            <div class="hero__media-frame" aria-hidden="true"></div>
+            <p class="hero__media-caption">Watch: How a Veridian engagement works (2 min)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Trust Indicators ==================== -->
+    <section class="trust-bar" aria-label="Trust indicators">
+      <div class="container">
+        <p class="trust-bar__label text-center text-muted">As Featured In</p>
+        <div class="trust-bar__press" aria-hidden="true">
+          <span class="trust-bar__press-logo">Press Logo</span>
+          <span class="trust-bar__press-logo">Press Logo</span>
+          <span class="trust-bar__press-logo">Press Logo</span>
+          <span class="trust-bar__press-logo">Press Logo</span>
+        </div>
+
+        <div class="trust-bar__partners">
+          <span class="trust-bar__partner-logo">Fragomen</span>
+          <span class="trust-bar__partner-logo">K2 Integrity</span>
+          <span class="trust-bar__partner-logo">Wealth-X</span>
+        </div>
+        <p class="text-small trust-bar__partnership-note"><strong>In partnership with</strong> — independent affiliate relationships; inclusion here does not imply endorsement or a joint venture.</p>
+      </div>
+    </section>
+
+    <!-- ==================== Services Overview ==================== -->
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="section-heading text-center reveal">
+          <div class="gold-divider"></div>
+          <span class="eyebrow">What We Do</span>
+          <h2>Three Ways We Move Faster For You</h2>
+          <p class="lede">A private, document-first alternative to the slow, generic parts of the immigration process — run by advisors, backed by your attorney.</p>
+        </div>
+
+        <div class="grid grid--3 mt-xl">
+          <article class="card reveal">
+            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M14 6h14l8 8v26a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 6v8h8" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M18 24h12M18 30h12M18 18h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <h3 class="card__title">Confidential Case Review</h3>
+            <p class="card__body">A senior advisor reviews your situation privately and maps the fastest realistic path available to you, before any commitment.</p>
+            <div class="card__footer">
+              <a href="/how-it-works.html" class="btn btn--ghost">Learn more →</a>
+            </div>
+          </article>
+
+          <article class="card reveal reveal--delay-1">
+            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="17" stroke="currentColor" stroke-width="1.5"/><path d="M24 14v10l7 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3 class="card__title">Accelerated Document Preparation</h3>
+            <p class="card__body">Our team compiles, organizes, and quality-checks your full documentation package in weeks — work that typically takes 12–18 months.</p>
+            <div class="card__footer">
+              <a href="#pricing" class="btn btn--ghost">Learn more →</a>
+            </div>
+          </article>
+
+          <article class="card reveal reveal--delay-2">
+            <svg class="card__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 6 8 12v11c0 10 7 16.5 16 19 9-2.5 16-9 16-19V12L24 6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M17 24l5 5 9-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3 class="card__title">Attorney-Ready Submission</h3>
+            <p class="card__body">Your finished file is packaged to your immigration attorney's standard and handed off for filing — we prepare, your counsel submits.</p>
+            <div class="card__footer">
+              <a href="/how-it-works.html" class="btn btn--ghost">Learn more →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Pricing Preview ==================== -->
+    <section class="section pricing-preview" id="pricing" style="background-color: var(--color-bg-subtle);">
+      <div class="container">
+        <div class="section-heading text-center reveal">
+          <div class="gold-divider"></div>
+          <span class="eyebrow">Pricing</span>
+          <h2>Three Tiers. One Standard of Care.</h2>
+          <p class="lede">Choose the pace that fits your timeline. Every tier includes full document preparation and attorney-ready packaging.</p>
+        </div>
+
+        <div class="grid grid--3 mt-xl">
+          <article class="card pricing-card reveal">
+            <span class="eyebrow">Foundation</span>
+            <p class="pricing-card__price">$<span data-counter="7500" data-counter-duration="1200">7,500</span></p>
+            <p class="pricing-card__timeline">4–6 months</p>
+            <p class="card__body pricing-card__body">For clients with time on their side. Full document preparation at our standard pace.</p>
+            <div class="card__footer">
+              <a href="/pricing.html" class="btn btn--secondary btn--full">View Full Pricing</a>
+            </div>
+          </article>
+
+          <article class="card pricing-card pricing-card--featured reveal reveal--delay-1">
+            <span class="eyebrow">Executive</span>
+            <p class="pricing-card__price">$<span data-counter="45000" data-counter-duration="1400">45,000</span><span class="pricing-card__price-suffix">+</span></p>
+            <p class="pricing-card__timeline">28-day guarantee</p>
+            <p class="card__body pricing-card__body">White-glove service with a dedicated senior advisor and the fastest available timeline.</p>
+            <div class="card__footer">
+              <a href="/pricing.html" class="btn btn--primary btn--full">View Full Pricing</a>
+            </div>
+          </article>
+
+          <article class="card pricing-card reveal reveal--delay-2">
+            <span class="eyebrow">Accelerated</span>
+            <p class="pricing-card__price">$<span data-counter="25000" data-counter-duration="1300">25,000</span></p>
+            <p class="pricing-card__timeline">6–8 weeks</p>
+            <p class="card__body pricing-card__body">For clients who need to move quickly. Priority handling across every stage of preparation.</p>
+            <div class="card__footer">
+              <a href="/pricing.html" class="btn btn--secondary btn--full">View Full Pricing</a>
+            </div>
+          </article>
+        </div>
+
+        <p class="text-small pricing-preview__footer">Filing fees and legal fees are handled separately with your attorney. <a href="/pricing.html" class="text-gold">See full pricing, deliverables, and add-ons →</a></p>
+      </div>
+    </section>
+
+    <!-- ==================== How It Works ==================== -->
+    <section class="section how-it-works" id="how-it-works">
+      <div class="container">
+        <div class="section-heading text-center reveal">
+          <div class="gold-divider"></div>
+          <span class="eyebrow">Process</span>
+          <h2>How It Works</h2>
+          <p class="lede">Four steps between where you are today and a submission-ready file.</p>
+        </div>
+
+        <ol class="timeline mt-xl">
+          <li class="timeline__step reveal">
+            <span class="timeline__number" aria-hidden="true">1</span>
+            <h3 class="timeline__title">Confidential Consultation</h3>
+            <p class="timeline__body">A private conversation with a senior advisor to understand your situation and goals.</p>
+          </li>
+          <li class="timeline__step reveal reveal--delay-1">
+            <span class="timeline__number" aria-hidden="true">2</span>
+            <h3 class="timeline__title">Choose Your Speed</h3>
+            <p class="timeline__body">Select the tier that matches your timeline: Foundation, Accelerated, or Executive.</p>
+          </li>
+          <li class="timeline__step reveal reveal--delay-2">
+            <span class="timeline__number" aria-hidden="true">3</span>
+            <h3 class="timeline__title">We Prepare Your File</h3>
+            <p class="timeline__body">Our team compiles, organizes, and quality-checks every document in your package.</p>
+          </li>
+          <li class="timeline__step reveal reveal--delay-3">
+            <span class="timeline__number" aria-hidden="true">4</span>
+            <h3 class="timeline__title">Attorney Submission</h3>
+            <p class="timeline__body">Your finished file is handed off to immigration counsel — yours or a referred attorney — for filing.</p>
+          </li>
+        </ol>
+
+        <p class="text-small text-center mt-xl"><a href="/how-it-works.html" class="text-gold">See the full process, timelines by tier, and what we don't do →</a></p>
+      </div>
+    </section>
+
+    <!-- ==================== Intake Form ==================== -->
+    <section class="section intake" id="start-review">
+      <div class="container intake__inner">
+        <div class="intake__intro reveal">
+          <div class="gold-divider" style="margin-inline: 0;"></div>
+          <span class="eyebrow">Confidential Review</span>
+          <h2>Start Your Confidential Review</h2>
+          <p class="lede">Tell us a little about your situation. A senior advisor will follow up personally within 24 hours.</p>
+          <p class="text-small mt-lg">Private advisory services. Not a law firm. No guarantees of outcome.</p>
+        </div>
+
+        <form id="intake-form" method="POST" action="/api/submit-lead" class="intake__form reveal reveal--delay-1" novalidate>
+          <div class="form-group form-group--floating">
+            <input class="form-control" type="text" id="fullName" name="fullName" autocomplete="name" placeholder=" " required>
+            <label class="form-label form-label--floating" for="fullName">Full Name</label>
+            <span class="form-error" id="fullName-error" role="alert"></span>
+          </div>
+
+          <div class="form-group form-group--floating">
+            <input class="form-control" type="text" id="country" name="country" autocomplete="country-name" placeholder=" " required>
+            <label class="form-label form-label--floating" for="country">Country</label>
+            <span class="form-error" id="country-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="netWorth">Net Worth</label>
+            <select class="form-control" id="netWorth" name="netWorth" required>
+              <option value="" disabled selected>Select a range</option>
+              <option value="$1M–$5M">$1M – $5M</option>
+              <option value="$5M–$20M">$5M – $20M</option>
+              <option value="$20M+">$20M+</option>
+            </select>
+            <span class="form-error" id="netWorth-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tierInterest">Tier Interest</label>
+            <select class="form-control" id="tierInterest" name="tierInterest" required>
+              <option value="" disabled selected>Select a tier</option>
+              <option value="Foundation">Foundation</option>
+              <option value="Accelerated">Accelerated</option>
+              <option value="Executive">Executive</option>
+              <option value="Not sure">Not sure yet</option>
+            </select>
+            <span class="form-error" id="tierInterest-error" role="alert"></span>
+          </div>
+
+          <div class="form-group form-group--floating">
+            <input class="form-control" type="email" id="email" name="email" autocomplete="email" placeholder=" " required>
+            <label class="form-label form-label--floating" for="email">Email</label>
+            <span class="form-error" id="email-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox" id="disclaimerAccepted" name="disclaimerAccepted" required>
+              <span class="text-small">I have read and accept the <a href="/legal.html" class="text-gold" target="_blank" rel="noopener">disclaimer and terms</a>. Veridian Global Advisors is not a law firm and this is not legal advice.</span>
+            </label>
+            <span class="form-error" id="disclaimerAccepted-error" role="alert"></span>
+          </div>
+
+          <div id="form-message" class="form-error" role="alert" hidden></div>
+
+          <button type="submit" class="btn btn--primary btn--full">Start Your Confidential Review</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== Footer ==================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__grid">
+        <div>
+          <p class="site-footer__brand-mark">Veridian <span class="nav__brand-sans">Global Advisors</span></p>
+          <p class="text-small site-footer__disclaimer">
+            Veridian Global Advisors is a private advisory firm providing document preparation and case-organization
+            services for individuals pursuing U.S. residency. Veridian Global Advisors is <strong>not a law firm</strong>,
+            does not provide legal advice, and does not represent clients before any government agency. No attorney-client
+            relationship is formed by using our services. Engaging Veridian does not guarantee any immigration outcome,
+            approval, or timeline. Clients are strongly encouraged to retain independent, licensed immigration counsel.
+            This is placeholder disclaimer copy and must be reviewed by qualified legal counsel before publication.
+          </p>
+        </div>
+
+        <nav class="site-footer__links" aria-label="Footer">
+          <span class="site-footer__heading">Company</span>
+          <a href="/legal.html">Legal</a>
+          <a href="/legal.html#privacy">Privacy</a>
+          <a href="/legal.html#terms">Terms</a>
+          <a href="/legal.html#aml">AML</a>
+        </nav>
+
+        <div>
+          <span class="site-footer__heading">Follow</span>
+          <div class="site-footer__social">
+            <a href="#" class="site-footer__social-link" aria-label="Veridian Global Advisors on LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3a1.96 1.96 0 1 0 0 3.92A1.96 1.96 0 0 0 5.25 3ZM20.44 20h-3.38v-6.1c0-1.46-.03-3.33-2.03-3.33-2.04 0-2.35 1.59-2.35 3.23V20H9.3V8.5h3.24v1.57h.05c.45-.85 1.56-1.75 3.22-1.75 3.44 0 4.08 2.27 4.08 5.21V20Z"/></svg>
+            </a>
+            <a href="#" class="site-footer__social-link" aria-label="Veridian Global Advisors on Twitter">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.53 3H21l-7.5 8.57L22.2 21h-6.9l-5.4-6.6L3.7 21H0l8.03-9.17L1.2 3h7.06l4.88 6.03L17.53 3Zm-1.21 16.17h1.9L7.77 4.72h-2.04l10.6 14.45Z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <p class="site-footer__copyright">© 2026 Veridian Global Advisors. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/analytics.js" defer></script>
+</body>
+</html>

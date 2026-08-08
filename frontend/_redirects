@@ -1,0 +1,10 @@
+# Netlify rewrite rules for clean URLs (no .html extension), matching the
+# canonical/OG URLs and sitemap.xml already declared in each page's <head>.
+# A 200 status means "rewrite" (serve this file, keep the clean URL in the
+# address bar) rather than a redirect. See frontend/README.md for why
+# internal links still point at the .html files for now.
+/pricing        /pricing.html        200
+/how-it-works   /how-it-works.html   200
+/legal          /legal.html          200
+/faq            /faq.html            200
+/thank-you      /thank-you.html      200

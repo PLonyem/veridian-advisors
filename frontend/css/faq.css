@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Veridian Global Advisors — FAQ Page
+   Builds on css/style.css (design system) and css/home.css (shared
+   .gold-divider, .page-hero*, .faq-item*, .cta-band*).
+   Contents: 1. Controls (search + category filter)  2. FAQ Groups
+   3. Back to Top
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Controls
+   -------------------------------------------------------------------------- */
+.faq-controls {
+  max-width: 720px;
+  margin: 0 auto var(--spacing-xl);
+}
+
+.faq-search {
+  position: relative;
+}
+
+.faq-search svg {
+  position: absolute;
+  top: 50%;
+  left: var(--spacing-md);
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--color-gray-500);
+  pointer-events: none;
+}
+
+.faq-search input {
+  width: 100%;
+  padding: 0.9em 1em 0.9em 2.6em;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.faq-search input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.18);
+}
+
+.faq-categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.faq-category-btn {
+  padding: 0.5em 1.2em;
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-gray-700);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.faq-category-btn:hover,
+.faq-category-btn:focus-visible {
+  border-color: var(--color-gold);
+  color: var(--color-navy);
+}
+
+.faq-category-btn.is-active {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-gold);
+}
+
+.faq-empty-state {
+  display: none;
+  text-align: center;
+  padding-block: var(--spacing-xl);
+  color: var(--color-text-muted);
+}
+
+.faq-empty-state.is-visible {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   2. FAQ Groups
+   -------------------------------------------------------------------------- */
+.faq-list {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.faq-group {
+  margin-bottom: var(--spacing-xl);
+}
+
+.faq-group__heading {
+  font-size: var(--text-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+  margin-bottom: var(--spacing-sm);
+}
+
+.faq-item.is-hidden,
+.faq-group.is-hidden {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. Back to Top
+   -------------------------------------------------------------------------- */
+.back-to-top {
+  position: fixed;
+  right: var(--spacing-lg);
+  bottom: var(--spacing-lg);
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-navy);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity var(--transition-smooth), transform var(--transition-smooth), background-color var(--transition-fast);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background-color: var(--color-navy-light);
+}
+
+.back-to-top svg {
+  width: 20px;
+  height: 20px;
+}

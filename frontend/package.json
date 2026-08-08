@@ -1,0 +1,13 @@
+{
+  "name": "veridian-frontend",
+  "version": "1.0.0",
+  "description": "Static frontend for Veridian Global Advisors. No framework, no build step required for local dev - see README.md. This package.json exists only for the production minification build.",
+  "private": true,
+  "scripts": {
+    "dev": "node dev-server.js",
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}

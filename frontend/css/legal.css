@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Veridian Global Advisors — Legal Page
+   Builds on css/style.css (design system) and css/home.css (shared
+   .gold-divider). Deliberately more restrained than the marketing pages -
+   this page's job is to read clearly and build trust, not to sell.
+   Contents: 1. Page Header  2. Contact Callout  3. Layout / TOC
+   4. Legal Section Typography
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Page Header — simpler than .page-hero: no bg pattern, no gradient text
+   -------------------------------------------------------------------------- */
+.legal-header {
+  padding-block: var(--spacing-xl) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.legal-header__inner {
+  max-width: 680px;
+}
+
+.legal-header p {
+  margin-top: var(--spacing-sm);
+}
+
+/* --------------------------------------------------------------------------
+   2. Contact Callout
+   -------------------------------------------------------------------------- */
+.contact-callout {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--color-off-white);
+  border-left: 3px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-lg);
+  max-width: 680px;
+}
+
+.contact-callout svg {
+  width: 28px;
+  height: 28px;
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.contact-callout p {
+  margin-top: var(--spacing-xs);
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout / Table of Contents
+   -------------------------------------------------------------------------- */
+.legal-layout {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--spacing-xl) var(--spacing-xxl);
+}
+
+@media (min-width: 1024px) {
+  .legal-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: var(--spacing-xxl);
+    align-items: start;
+  }
+}
+
+.legal-toc {
+  position: sticky;
+  top: 84px;
+  z-index: 10;
+  display: flex;
+  gap: var(--spacing-xs);
+  overflow-x: auto;
+  padding-block: var(--spacing-sm);
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  -webkit-overflow-scrolling: touch;
+}
+
+.legal-toc__heading {
+  display: none;
+}
+
+.legal-toc__link {
+  flex-shrink: 0;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-gray-500);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.legal-toc__link:hover,
+.legal-toc__link:focus-visible {
+  color: var(--color-navy);
+}
+
+.legal-toc__link.is-active {
+  color: var(--color-gold);
+  background-color: rgba(197, 160, 89, 0.1);
+}
+
+@media (min-width: 1024px) {
+  .legal-toc {
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-x: visible;
+    border-bottom: none;
+    padding-block: 0;
+    gap: 2px;
+  }
+
+  .legal-toc__heading {
+    display: block;
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .legal-toc__link {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-left: 2px solid var(--color-border);
+    border-radius: 0;
+  }
+
+  .legal-toc__link.is-active {
+    border-left-color: var(--color-gold);
+    background-color: transparent;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. Legal Section Typography
+   -------------------------------------------------------------------------- */
+.legal-content {
+  max-width: 760px;
+}
+
+.legal-section {
+  padding-block: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border);
+  scroll-margin-top: 100px;
+}
+
+.legal-section:first-child {
+  padding-top: 0;
+}
+
+.legal-section:last-child {
+  border-bottom: none;
+}
+
+.legal-updated {
+  display: block;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+}
+
+.legal-section h3 {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.legal-section p {
+  max-width: 68ch;
+}
+
+.legal-section ul {
+  list-style: disc;
+  padding-left: 1.25em;
+  margin-top: var(--spacing-md);
+  display: grid;
+  gap: var(--spacing-sm);
+  max-width: 68ch;
+}
+
+.legal-section li {
+  color: var(--color-text);
+}
+
+.legal-note {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-off-white);
+  border-left: 3px solid var(--color-gray-300);
+  font-size: var(--text-small);
+  color: var(--color-gray-700);
+  max-width: 68ch;
+}

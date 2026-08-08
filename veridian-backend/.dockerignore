@@ -1,0 +1,12 @@
+node_modules
+data.db
+data
+backups
+logs
+.env
+.env.example
+.git
+.gitignore
+npm-debug.log*
+postman
+README.md

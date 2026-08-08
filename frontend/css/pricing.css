@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Veridian Global Advisors — Pricing Page
+   Builds on css/style.css (design system) and css/home.css (shared
+   .gold-divider, .section-heading, .card__icon, .pricing-card*, .page-hero*,
+   .cta-band*, which this page reuses).
+   Contents: 1. Trust Badges  2. Comparison Table/Cards
+   3. Add-Ons  4. Included/Not-Included  5. FAQ
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Trust Badges
+   -------------------------------------------------------------------------- */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-lg);
+  position: relative;
+  z-index: 1;
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+
+.trust-badge svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. Comparison Table (desktop) / Cards (mobile)
+   -------------------------------------------------------------------------- */
+.pricing-cards {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+.pricing-table-wrapper {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .pricing-cards {
+    display: none;
+  }
+
+  .pricing-table-wrapper {
+    display: block;
+  }
+}
+
+.pricing-card__deliverables {
+  display: grid;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  text-align: left;
+}
+
+.pricing-card__deliverables li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  font-size: var(--text-small);
+  color: var(--color-gray-700);
+}
+
+.pricing-card__best-for {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-small);
+}
+
+.check-icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 0.15em;
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.pricing-table th:first-child,
+.pricing-table td:first-child {
+  min-width: 130px;
+}
+
+.pricing-table__fee {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--color-navy);
+  white-space: nowrap;
+}
+
+.pricing-table__deliverables {
+  display: grid;
+  gap: 6px;
+}
+
+.pricing-table__deliverables li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pricing-table tr.is-featured td {
+  background-color: rgba(197, 160, 89, 0.07);
+  border-top: 2px solid var(--color-gold);
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.pricing-table tr.is-featured td:first-child {
+  border-left: 2px solid var(--color-gold);
+}
+
+.pricing-table tr.is-featured td:last-child {
+  border-right: 2px solid var(--color-gold);
+}
+
+.pricing-table__badge {
+  display: inline-block;
+  margin-left: var(--spacing-sm);
+  background-color: var(--color-gold);
+  color: var(--color-navy);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.pricing-footnote {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-off-white);
+  border-left: 3px solid var(--color-gold);
+  font-size: var(--text-small);
+  color: var(--color-gray-700);
+}
+
+/* --------------------------------------------------------------------------
+   3. Add-Ons
+   -------------------------------------------------------------------------- */
+.addon-card__price {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-navy);
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* --------------------------------------------------------------------------
+   4. Included / Not Included
+   -------------------------------------------------------------------------- */
+.included-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .included-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.included-col {
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+}
+
+.included-col--yes {
+  background-color: var(--color-off-white);
+  border-top: 3px solid var(--color-gold);
+}
+
+.included-col--no {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+}
+
+.included-col__title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.included-col__title svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.included-col--yes .included-col__title svg {
+  color: var(--color-gold);
+}
+
+.included-col--no .included-col__title svg {
+  color: var(--color-gray-500);
+}
+
+.included-list {
+  display: grid;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.included-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  font-size: var(--text-small);
+}
+
+.included-list li svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+.included-col--yes .included-list li svg {
+  color: var(--color-gold);
+}
+
+.included-col--no .included-list li svg {
+  color: var(--color-gray-500);
+}
+
+.included-col--no .included-list li {
+  color: var(--color-gray-700);
+}
+
+/* --------------------------------------------------------------------------
+   5. FAQ (see css/home.css for .faq-item* - shared with faq.html)
+   -------------------------------------------------------------------------- */
+.faq-preview__footer {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}

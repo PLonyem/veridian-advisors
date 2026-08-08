@@ -1,0 +1,33 @@
+{
+  "name": "veridian-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Veridian Global Advisors",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "backup": "node src/scripts/backup.js",
+    "db:migrate": "node src/scripts/migrate.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.1",
+    "helmet": "^8.3.0",
+    "nodemailer": "^9.0.4",
+    "sqlite3": "^6.0.1"
+  },
+  "allowScripts": {
+    "sqlite3@6.0.1": true
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

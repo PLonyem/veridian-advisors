@@ -1,0 +1,626 @@
+/* ==========================================================================
+   Veridian Global Advisors — Shared Page Chrome + Homepage
+   Page-specific composition on top of css/style.css's design system. Despite
+   the filename, sections 1, 1b, and 9 (divider/heading, subpage hero, CTA
+   band) are reused across pages (pricing.html, how-it-works.html, ...) -
+   they started as homepage-only and were promoted here once a second page
+   needed them, rather than duplicated per-page.
+   Contents: 1. Section Heading  1b. Page Hero (subpages)  2. Hero  3. Trust
+   Bar  4. Services  5. Pricing Preview  6. How It Works  7. Intake
+   8. Footer  9. CTA Band
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Section Heading + shared decorative divider
+   -------------------------------------------------------------------------- */
+.section-heading {
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.section-heading .lede {
+  margin-top: var(--spacing-md);
+}
+
+.gold-divider {
+  width: 64px;
+  height: 2px;
+  margin: 0 auto var(--spacing-md);
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* --------------------------------------------------------------------------
+   1b. Page Hero — simple centered hero used by subpages (pricing.html,
+   how-it-works.html, ...). Not the homepage's full-viewport two-column
+   .hero below.
+   -------------------------------------------------------------------------- */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding-block: calc(var(--spacing-xxl) + var(--spacing-lg)) var(--spacing-xxl);
+  background: linear-gradient(160deg, var(--color-off-white) 0%, var(--color-cream) 55%, var(--color-white) 100%);
+}
+
+.page-hero__bg-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  color: var(--color-gold);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.page-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.page-hero__subhead {
+  margin-top: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   2. Hero
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--color-off-white) 0%, var(--color-cream) 45%, var(--color-white) 100%);
+  padding-block: var(--spacing-xxl);
+}
+
+.hero__bg-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  color: var(--color-gold);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--spacing-xl);
+  align-items: center;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .hero__inner {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: var(--spacing-xxl);
+  }
+}
+
+.hero__headline {
+  margin-top: var(--spacing-sm);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-navy) 0%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__subhead {
+  margin-top: var(--spacing-md);
+  max-width: 46ch;
+}
+
+.hero__checklist {
+  margin-top: var(--spacing-lg);
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.hero__checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  font-size: var(--text-small);
+  color: var(--color-gray-700);
+}
+
+.hero__check-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.1em;
+  color: var(--color-gold);
+}
+
+.hero__cta {
+  margin-top: var(--spacing-lg);
+}
+
+.hero__fineprint {
+  margin-top: var(--spacing-md);
+}
+
+.hero__media-placeholder {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero__media-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(197, 160, 89, 0.25), transparent 60%);
+}
+
+.hero__media-frame {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  border-radius: calc(var(--radius-lg) - 4px);
+  pointer-events: none;
+}
+
+.hero__media-icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  color: var(--color-gold);
+}
+
+.hero__media-caption {
+  position: absolute;
+  left: var(--spacing-lg);
+  right: var(--spacing-lg);
+  bottom: var(--spacing-lg);
+  color: var(--color-white);
+  font-size: var(--text-small);
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+   3. Trust Bar
+   -------------------------------------------------------------------------- */
+.trust-bar {
+  padding-block: var(--spacing-xl);
+  background-color: var(--color-off-white);
+  border-block: 1px solid var(--color-border);
+}
+
+.trust-bar__label {
+  font-size: var(--text-small);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: var(--spacing-lg);
+}
+
+.trust-bar__press {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.45;
+}
+
+.trust-bar__press-logo {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+}
+
+.trust-bar__partners {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+
+.trust-bar__partner-logo {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-500);
+  filter: grayscale(1);
+  opacity: 0.75;
+  transition: opacity var(--transition-fast);
+}
+
+.trust-bar__partner-logo:hover {
+  opacity: 1;
+}
+
+.trust-bar__partnership-note {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+.trust-bar__partnership-note strong {
+  color: var(--color-gray-700);
+}
+
+/* --------------------------------------------------------------------------
+   4. Services
+   -------------------------------------------------------------------------- */
+.card__icon {
+  width: 44px;
+  height: 44px;
+  color: var(--color-gold);
+  margin-bottom: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   5. Pricing Preview
+   -------------------------------------------------------------------------- */
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.pricing-card__price {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  color: var(--color-navy);
+  margin-top: var(--spacing-sm);
+}
+
+.pricing-card__price-suffix {
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.pricing-card__timeline {
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-gold-light);
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.pricing-card__body {
+  flex-grow: 1;
+}
+
+.pricing-card--featured {
+  position: relative;
+  border: 2px solid var(--color-gold);
+  border-top: 2px solid var(--color-gold);
+}
+
+.pricing-card--featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-gold);
+  color: var(--color-navy);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.pricing-preview__footer {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+/* --------------------------------------------------------------------------
+   6. How It Works
+   -------------------------------------------------------------------------- */
+.timeline {
+  display: grid;
+  gap: var(--spacing-xl);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .timeline {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.timeline__step {
+  position: relative;
+  text-align: center;
+  padding-top: calc(56px + var(--spacing-md));
+}
+
+.timeline__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-navy);
+  border: 2px solid var(--color-gold);
+  color: var(--color-gold);
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+
+.timeline__title {
+  margin-top: var(--spacing-xs);
+}
+
+.timeline__body {
+  margin-top: var(--spacing-xs);
+  font-size: var(--text-small);
+  color: var(--color-gray-700);
+}
+
+@media (min-width: 768px) {
+  .timeline__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 27px;
+    left: calc(50% + 28px + var(--spacing-sm));
+    right: calc(-50% + 28px + var(--spacing-sm));
+    height: 1px;
+    background-color: var(--color-gold-subtle);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Intake
+   -------------------------------------------------------------------------- */
+.intake {
+  background-color: var(--color-bg-subtle);
+}
+
+.intake__inner {
+  display: grid;
+  gap: var(--spacing-xl);
+  /* minmax(0, 1fr), not a bare auto column (the grid default): an auto/fr
+     track's implicit minimum is its content's max-content width, so long
+     unbroken text (e.g. the fine-print paragraph) would otherwise force
+     this column - and the whole page - wider than the viewport on mobile. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .intake__inner {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+  }
+}
+
+.intake__intro {
+  position: sticky;
+  top: calc(var(--spacing-xl) + 64px);
+}
+
+.intake__form {
+  background-color: var(--color-white);
+  padding: var(--spacing-xl);
+  border-top: 3px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.intake__form .form-group:last-of-type {
+  margin-bottom: var(--spacing-md);
+}
+
+/* --------------------------------------------------------------------------
+   8. Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  background-color: var(--color-navy);
+  color: var(--color-gray-300);
+  padding-block: var(--spacing-xxl) var(--spacing-lg);
+  /* Always below the fold on first paint and has no .reveal/IntersectionObserver
+     targets inside it, so skipping its rendering cost until it's actually
+     scrolled near is safe here (unlike most other sections, which do contain
+     .reveal elements that content-visibility:auto could stop from ever
+     triggering while their ancestor's rendering is skipped). */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 640px;
+}
+
+.site-footer__grid {
+  display: grid;
+  gap: var(--spacing-xl);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .site-footer__grid {
+    grid-template-columns: 1.4fr 1fr 0.7fr;
+  }
+}
+
+.site-footer__brand-mark {
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.site-footer__brand-mark .nav__brand-sans {
+  color: var(--color-gray-500);
+}
+
+.site-footer__disclaimer {
+  margin-top: var(--spacing-md);
+  max-width: 60ch;
+  line-height: 1.7;
+  color: var(--color-gray-500);
+}
+
+.site-footer__heading {
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-300);
+  margin-bottom: var(--spacing-md);
+}
+
+.site-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.site-footer__links a {
+  font-size: var(--text-small);
+  color: var(--color-gray-300);
+  transition: color var(--transition-fast);
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: var(--color-gold);
+}
+
+.site-footer__social {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.site-footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-gray-700);
+  border-radius: 50%;
+  color: var(--color-gray-300);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.site-footer__social-link:hover,
+.site-footer__social-link:focus-visible {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.site-footer__social-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.site-footer__copyright {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+}
+
+/* --------------------------------------------------------------------------
+   9. CTA Band — navy full-bleed call-to-action, reused across pages
+   -------------------------------------------------------------------------- */
+.cta-band {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding-block: var(--spacing-xxl);
+  background: linear-gradient(160deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+  color: var(--color-gray-300);
+}
+
+.cta-band .gold-divider {
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+.cta-band h2 {
+  color: var(--color-white);
+}
+
+.cta-band__subhead {
+  margin-top: var(--spacing-md);
+  color: var(--color-gray-300);
+}
+
+.cta-band .btn {
+  margin-top: var(--spacing-lg);
+}
+
+/* --------------------------------------------------------------------------
+   10. FAQ Accordion — used by pricing.html's preview and faq.html's full list
+   -------------------------------------------------------------------------- */
+.faq-item {
+  border-bottom: 1px solid var(--color-border);
+  padding-block: var(--spacing-md);
+  contain: layout style;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--color-navy);
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-gold-text);
+  transition: transform var(--transition-fast);
+}
+
+.faq-item[open] summary::after {
+  content: '+';
+  transform: rotate(45deg);
+}
+
+/* Height is toggled by js/faq.js (and js/main.js's no-JS-independent native
+   <details> fallback still works without it - JS only adds the smooth
+   transition on top). overflow:hidden is required for the height animation;
+   it's harmless when JS is absent since native <details> just shows/hides
+   this content wholesale via the `open` attribute regardless. */
+.faq-item__answer {
+  overflow: hidden;
+  height: auto;
+  margin-top: var(--spacing-sm);
+  color: var(--color-gray-700);
+  max-width: 68ch;
+  transition: height var(--transition-smooth);
+}
