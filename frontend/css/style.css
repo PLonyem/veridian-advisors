@@ -434,6 +434,11 @@ small,
 .btn--sm {
   padding: 0.6em 1.3em;
   font-size: 0.75rem;
+  /* Touch-target minimum (44px) - the compact padding above alone renders
+     at ~37px tall. .btn's own display:inline-flex + align-items:center
+     (see the base .btn rule) keeps the label vertically centered in the
+     taller box, so this doesn't need any other layout change here. */
+  min-height: 44px;
 }
 
 .btn--full {
@@ -750,10 +755,14 @@ textarea.form-control {
 .nav__toggle {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 5px;
-  width: 28px;
-  height: 28px;
+  /* 44px tap target (touch-target minimum), while the bars below stay a
+     fixed 24px wide so the icon itself doesn't visually grow along with it -
+     it previously matched the button's own 28px box via width:100%. */
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
@@ -762,11 +771,17 @@ textarea.form-control {
 
 .nav__toggle-bar {
   display: block;
-  width: 100%;
+  width: 24px;
   height: 2px;
   background-color: var(--color-navy);
   border-radius: 1px;
   transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+}
+
+.nav__toggle.is-open .nav__toggle-bar {
+  /* The open-state menu overlay is navy; without this the bars stay
+     navy-on-navy and the close icon disappears. */
+  background-color: var(--color-white);
 }
 
 .nav__toggle.is-open .nav__toggle-bar:nth-child(1) {
