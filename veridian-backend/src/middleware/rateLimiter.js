@@ -32,4 +32,26 @@ const leadSubmissionLimiter = rateLimit({
   },
 });
 
-module.exports = { leadSubmissionLimiter };
+// Separate, more generous limiter for the manual email-sending endpoints
+// (pre-vetting, scheduling, engagement letter, follow-up). These are already
+// gated by authenticateAdmin, but a leaked/compromised admin key or a buggy
+// automation script could still fire off a flood of real emails to real
+// clients - this caps that damage independently of the admin key itself.
+const EMAIL_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const EMAIL_RATE_LIMIT_MAX = 10; // 10 emails per IP per hour
+
+const emailLimiter = rateLimit({
+  windowMs: EMAIL_RATE_LIMIT_WINDOW_MS,
+  max: EMAIL_RATE_LIMIT_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    logger.warn(`[RATE_LIMIT] Email rate limit exceeded: ip=${req.ip} path=${req.originalUrl}`);
+    res.status(429).json({
+      error: 'Too many requests',
+      message: `You have exceeded the email sending limit (${EMAIL_RATE_LIMIT_MAX} per hour). Please try again in ${formatWindow(EMAIL_RATE_LIMIT_WINDOW_MS)}.`,
+    });
+  },
+});
+
+module.exports = { leadSubmissionLimiter, emailLimiter };

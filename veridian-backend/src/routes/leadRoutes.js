@@ -1,9 +1,14 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const leadService = require('../services/leadService');
 const emailService = require('../services/emailService');
 const { validateLeadPayload } = require('../utils/validators');
 const { authenticateAdmin } = require('../middleware/auth');
+const { emailLimiter } = require('../middleware/rateLimiter');
 const logger = require('../utils/logger');
+
+const ENGAGEMENT_LETTER_TEMPLATE_PATH = path.resolve(__dirname, '..', 'documents', 'engagement-letter-template.pdf');
 
 const router = express.Router();
 
@@ -65,35 +70,16 @@ router.post('/submit-lead', async (req, res) => {
   // handler returns immediately after kicking them off. Each promise still gets
   // its own `.catch()` so a rejection is logged instead of becoming an
   // unhandled promise rejection (which could crash the process).
-  emailService
-    .sendClientConfirmation(lead)
-    .then((info) => {
-      // info is null if this was skipped as a duplicate send (see emailService's
-      // 5-minute rate limit) - nothing was actually sent, so nothing to log.
-      if (!info) return null;
-      return leadService.logCommunication(lead.id, {
-        type: 'outgoing',
-        subject: 'Thank you for contacting Veridian Global Advisors',
-        content: 'Automated confirmation sent: 24-hour response expectation, privacy note, links to How It Works and Pricing.',
-      });
-    })
-    .catch((err) => {
-      logger.error(`leadRoutes.submit-lead: sendClientConfirmation failed for lead ${lead.id}: ${err.message}`);
-    });
+  // Logging to the communications table now happens inside emailService itself
+  // (see emailService.sendClientConfirmation / sendAdminNotification), so these
+  // are pure fire-and-forget sends here.
+  emailService.sendClientConfirmation(lead).catch((err) => {
+    logger.error(`leadRoutes.submit-lead: sendClientConfirmation failed for lead ${lead.id}: ${err.message}`);
+  });
 
-  emailService
-    .sendAdminNotification(lead)
-    .then((info) => {
-      if (!info) return null;
-      return leadService.logCommunication(lead.id, {
-        type: 'outgoing',
-        subject: `New Lead – ${lead.full_name} – ${lead.tier_interest}`,
-        content: 'Automated admin notification sent with full lead details and a link to view all leads.',
-      });
-    })
-    .catch((err) => {
-      logger.error(`leadRoutes.submit-lead: sendAdminNotification failed for lead ${lead.id}: ${err.message}`);
-    });
+  emailService.sendAdminNotification(lead).catch((err) => {
+    logger.error(`leadRoutes.submit-lead: sendAdminNotification failed for lead ${lead.id}: ${err.message}`);
+  });
 
   return res.status(201).json({
     success: true,
@@ -206,7 +192,7 @@ router.delete('/leads/:id', authenticateAdmin, async (req, res) => {
 
 // POST /api/leads/:id/pre-vetting-email - protected. Sends the 5-question
 // pre-vetting questionnaire and advances status to 'Contacted'.
-router.post('/leads/:id/pre-vetting-email', authenticateAdmin, async (req, res) => {
+router.post('/leads/:id/pre-vetting-email', authenticateAdmin, emailLimiter, async (req, res) => {
   const id = parseLeadId(req.params.id);
   if (id === null) {
     return res.status(400).json({ error: 'id must be a positive integer' });
@@ -218,12 +204,7 @@ router.post('/leads/:id/pre-vetting-email', authenticateAdmin, async (req, res) 
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    await emailService.sendPreVettingEmail(lead);
-    await leadService.logCommunication(id, {
-      type: 'outgoing',
-      subject: 'Your inquiry about our document preparation services – next steps',
-      content: 'Pre-vetting questionnaire sent (5 questions).',
-    });
+    await emailService.sendPreVettingEmail(lead.email, lead.full_name);
     const updated = await leadService.updateLeadStatus(id, 'Contacted');
 
     return res.status(200).json({ success: true, data: updated });
@@ -237,7 +218,7 @@ router.post('/leads/:id/pre-vetting-email', authenticateAdmin, async (req, res) 
 // platform?: string, durationMinutes?: number }. Proposes consultation times;
 // does NOT change status - that happens via PATCH /status once the client has
 // replied and a time is actually confirmed (see requirement 3: manual scheduling).
-router.post('/leads/:id/scheduling-email', authenticateAdmin, async (req, res) => {
+router.post('/leads/:id/scheduling-email', authenticateAdmin, emailLimiter, async (req, res) => {
   const id = parseLeadId(req.params.id);
   if (id === null) {
     return res.status(400).json({ error: 'id must be a positive integer' });
@@ -254,14 +235,9 @@ router.post('/leads/:id/scheduling-email', authenticateAdmin, async (req, res) =
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    await emailService.sendConsultationSchedulingEmail(lead, { slots, platform, durationMinutes });
-    const entry = await leadService.logCommunication(id, {
-      type: 'outgoing',
-      subject: 'Consultation Confirmation – Veridian Global Advisors',
-      content: `Proposed slots: ${slots.join('; ')}.${platform ? ` Platform: ${platform}.` : ''}`,
-    });
+    await emailService.sendSchedulingEmail(lead.email, lead.full_name, { slots, platform, durationMinutes });
 
-    return res.status(200).json({ success: true, data: entry });
+    return res.status(200).json({ success: true });
   } catch (err) {
     logger.error(`Failed to send scheduling email for lead ${id}: ${err.message}`);
     return res.status(500).json({ error: 'Failed to send scheduling email' });
@@ -270,7 +246,7 @@ router.post('/leads/:id/scheduling-email', authenticateAdmin, async (req, res) =
 
 // POST /api/leads/:id/engagement-letter-email - protected. Sends the engagement
 // letter PDF (see src/documents/README.md) and advances status to 'Engagement Sent'.
-router.post('/leads/:id/engagement-letter-email', authenticateAdmin, async (req, res) => {
+router.post('/leads/:id/engagement-letter-email', authenticateAdmin, emailLimiter, async (req, res) => {
   const id = parseLeadId(req.params.id);
   if (id === null) {
     return res.status(400).json({ error: 'id must be a positive integer' });
@@ -282,12 +258,14 @@ router.post('/leads/:id/engagement-letter-email', authenticateAdmin, async (req,
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    await emailService.sendEngagementLetterEmail(lead);
-    await leadService.logCommunication(id, {
-      type: 'outgoing',
-      subject: 'Engagement Letter – Veridian Global Advisors',
-      content: 'Engagement letter PDF sent as attachment.',
-    });
+    if (!fs.existsSync(ENGAGEMENT_LETTER_TEMPLATE_PATH)) {
+      throw new Error(
+        `Engagement letter template not found at ${ENGAGEMENT_LETTER_TEMPLATE_PATH}. Place the firm's engagement letter PDF there (prepared by qualified legal counsel) before using this endpoint.`,
+      );
+    }
+    const pdfBuffer = fs.readFileSync(ENGAGEMENT_LETTER_TEMPLATE_PATH);
+
+    await emailService.sendEngagementLetter(lead.email, lead.full_name, pdfBuffer);
     const updated = await leadService.updateLeadStatus(id, 'Engagement Sent');
 
     return res.status(200).json({ success: true, data: updated });
@@ -303,7 +281,7 @@ router.post('/leads/:id/engagement-letter-email', authenticateAdmin, async (req,
 
 // POST /api/leads/:id/follow-up-email - protected. Body: { message?: string }.
 // Sends a gentle reminder/update; does not change status.
-router.post('/leads/:id/follow-up-email', authenticateAdmin, async (req, res) => {
+router.post('/leads/:id/follow-up-email', authenticateAdmin, emailLimiter, async (req, res) => {
   const id = parseLeadId(req.params.id);
   if (id === null) {
     return res.status(400).json({ error: 'id must be a positive integer' });
@@ -317,14 +295,9 @@ router.post('/leads/:id/follow-up-email', authenticateAdmin, async (req, res) =>
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    await emailService.sendFollowUpEmail(lead, message);
-    const entry = await leadService.logCommunication(id, {
-      type: 'outgoing',
-      subject: 'Following up – Veridian Global Advisors',
-      content: message || 'Gentle reminder sent (default message).',
-    });
+    await emailService.sendFollowUpEmail(lead.email, lead.full_name, message);
 
-    return res.status(200).json({ success: true, data: entry });
+    return res.status(200).json({ success: true });
   } catch (err) {
     logger.error(`Failed to send follow-up email for lead ${id}: ${err.message}`);
     return res.status(500).json({ error: 'Failed to send follow-up email' });
@@ -344,7 +317,7 @@ router.get('/leads/:id/communications', authenticateAdmin, async (req, res) => {
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    const communications = await leadService.getCommunicationsForLead(id);
+    const communications = await leadService.getCommunications(id);
     return res.status(200).json({ success: true, data: communications });
   } catch (err) {
     logger.error(`Failed to fetch communications for lead ${id}: ${err.message}`);
@@ -373,7 +346,7 @@ router.post('/leads/:id/communications', authenticateAdmin, async (req, res) => 
       return res.status(404).json({ error: 'Lead not found' });
     }
 
-    const entry = await leadService.logCommunication(id, { type, channel, subject, content });
+    const entry = await leadService.addCommunication(id, type, subject, content, channel);
     return res.status(201).json({ success: true, data: entry });
   } catch (err) {
     logger.error(`Failed to log communication for lead ${id}: ${err.message}`);

@@ -89,8 +89,10 @@ The server also runs migrations automatically on every startup (see `initializeD
    ```
    migrate: 001_create_leads_table.sql - applying...
    migrate: 001_create_leads_table.sql - done
-   migrate: 002_add_notes_column.sql - applying...
-   migrate: 002_add_notes_column.sql - done
+   migrate: 002_add_communications_table.sql - applying...
+   migrate: 002_add_communications_table.sql - done
+   migrate: 003_add_communications_indexes.sql - applying...
+   migrate: 003_add_communications_indexes.sql - done
    migrate: all migrations applied successfully
    ```
 
@@ -98,7 +100,8 @@ The server also runs migrations automatically on every startup (see `initializeD
 
    ```
    migrate: 001_create_leads_table.sql - already applied, skipping
-   migrate: 002_add_notes_column.sql - already applied, skipping
+   migrate: 002_add_communications_table.sql - already applied, skipping
+   migrate: 003_add_communications_indexes.sql - already applied, skipping
    ```
 
 2. Verify the database:

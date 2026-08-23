@@ -110,4 +110,44 @@ function logRequest(method, url, statusCode, responseTimeMs) {
   log(level, `${method} ${url} ${statusCode} ${responseTimeMs.toFixed(1)}ms`);
 }
 
-module.exports = { debug, info, warn, error, logRequest };
+/**
+ * Logs an email send/receive both as a normal log line and as a row in the
+ * communications table. leadService is required lazily (inside the function
+ * body, not at module load time) because leadService.js itself requires this
+ * logger module - requiring it up top would create a circular require.
+ *
+ * @param {number|string} leadId
+ * @param {('incoming'|'outgoing')} type
+ * @param {string} subject
+ * @param {string} content
+ * @returns {Promise<Object|null>} The created communications row, or null if the DB write failed (already logged).
+ */
+async function logEmail(leadId, type, subject, content) {
+  info('Email logged', { leadId, type, subject });
+
+  try {
+    const leadService = require('../services/leadService');
+    return await leadService.addCommunication(leadId, type, subject, content);
+  } catch (err) {
+    error('Failed to log email to communications table', { leadId, type, error: err.message });
+    return null;
+  }
+}
+
+/**
+ * Logs the details of a lead's form submission at INFO level.
+ *
+ * @param {Object} leadData
+ * @param {string} [leadData.full_name]
+ * @param {string} [leadData.email]
+ * @param {string} [leadData.country]
+ * @param {string} [leadData.net_worth]
+ * @param {string} [leadData.tier_interest]
+ * @returns {void}
+ */
+function logFormSubmission(leadData = {}) {
+  const { full_name, email, country, net_worth, tier_interest } = leadData;
+  info('Form submission received', { full_name, email, country, net_worth, tier_interest });
+}
+
+module.exports = { debug, info, warn, error, logRequest, logEmail, logFormSubmission };

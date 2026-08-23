@@ -292,14 +292,13 @@ const COMMUNICATION_TYPES = ['incoming', 'outgoing'];
  * reply should end up as a row here.
  *
  * @param {number|string} leadId - Lead id this communication belongs to.
- * @param {Object} entry
- * @param {('incoming'|'outgoing')} entry.type - Direction of the communication.
- * @param {string} [entry.channel='email'] - Communication channel.
- * @param {string} [entry.subject] - Email subject line (or a short label for non-email channels).
- * @param {string} [entry.content] - Body text or a summary of what was sent/received.
+ * @param {('incoming'|'outgoing')} type - Direction of the communication.
+ * @param {string} [subject] - Email subject line (or a short label for non-email channels).
+ * @param {string} [content] - Body text or a summary of what was sent/received.
+ * @param {string} [channel='email'] - Communication channel.
  * @returns {Promise<Object>} The newly created communications row.
  */
-async function logCommunication(leadId, { type, channel = 'email', subject, content } = {}) {
+async function addCommunication(leadId, type, subject, content, channel = 'email') {
   if (!COMMUNICATION_TYPES.includes(type)) {
     throw new Error(`Invalid communication type "${type}". Must be one of: ${COMMUNICATION_TYPES.join(', ')}`);
   }
@@ -311,10 +310,10 @@ async function logCommunication(leadId, { type, channel = 'email', subject, cont
     );
 
     const entry = await db.get('SELECT * FROM communications WHERE id = ?', [result.lastID]);
-    logger.info(`[${new Date().toISOString()}] leadService.logCommunication: id=${entry.id} lead_id=${leadId} type=${type}`);
+    logger.info(`[${new Date().toISOString()}] leadService.addCommunication: id=${entry.id} lead_id=${leadId} type=${type}`);
     return entry;
   } catch (err) {
-    logger.error(`leadService.logCommunication: failed for lead_id=${leadId}: ${err.message}`);
+    logger.error(`leadService.addCommunication: failed for lead_id=${leadId}: ${err.message}`);
     throw new Error(`Failed to log communication for lead ${leadId}: ${err.message}`);
   }
 }
@@ -325,14 +324,32 @@ async function logCommunication(leadId, { type, channel = 'email', subject, cont
  * @param {number|string} leadId - Lead id.
  * @returns {Promise<Object[]>} Matching communications rows.
  */
-async function getCommunicationsForLead(leadId) {
+async function getCommunications(leadId) {
   try {
     const rows = await db.all('SELECT * FROM communications WHERE lead_id = ? ORDER BY sent_at DESC', [leadId]);
-    logger.info(`[${new Date().toISOString()}] leadService.getCommunicationsForLead: lead_id=${leadId} returned=${rows.length}`);
+    logger.info(`[${new Date().toISOString()}] leadService.getCommunications: lead_id=${leadId} returned=${rows.length}`);
     return rows;
   } catch (err) {
-    logger.error(`leadService.getCommunicationsForLead: failed for lead_id=${leadId}: ${err.message}`);
+    logger.error(`leadService.getCommunications: failed for lead_id=${leadId}: ${err.message}`);
     throw new Error(`Failed to fetch communications for lead ${leadId}: ${err.message}`);
+  }
+}
+
+/**
+ * Retrieves every communication across all leads, newest first. Used for
+ * full-database exports (see src/scripts/backup.js) - getCommunications()
+ * above is scoped to a single lead and isn't a fit for that.
+ *
+ * @returns {Promise<Object[]>} All communications rows.
+ */
+async function getAllCommunications() {
+  try {
+    const rows = await db.all('SELECT * FROM communications ORDER BY sent_at DESC');
+    logger.info(`[${new Date().toISOString()}] leadService.getAllCommunications: returned=${rows.length}`);
+    return rows;
+  } catch (err) {
+    logger.error(`leadService.getAllCommunications: failed: ${err.message}`);
+    throw new Error(`Failed to fetch all communications: ${err.message}`);
   }
 }
 
@@ -347,6 +364,7 @@ module.exports = {
   updateLeadStatus,
   deleteLead,
   getLeadStats,
-  logCommunication,
-  getCommunicationsForLead,
+  addCommunication,
+  getCommunications,
+  getAllCommunications,
 };

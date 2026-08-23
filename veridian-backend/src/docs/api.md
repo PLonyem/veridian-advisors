@@ -3,10 +3,12 @@
 ## Base URL
 
 ```
-http://localhost:5000/api
+http://localhost:3000/api
 ```
 
-The port comes from the `PORT` env var (`5000` by default, see `.env.example`); adjust the examples below if your local server is running on a different port. All endpoints below are relative to this base URL.
+In local development, the frontend dev server (`npm run dev` in `frontend/`, see `frontend/dev-server.js`) serves the site on port `3000` and reverse-proxies every `/api/*` request through to this backend — so `http://localhost:3000/api` is the base URL you'll actually use day to day, matching how the frontend itself calls the API via relative `/api/...` URLs.
+
+The backend can also be reached directly, without the frontend proxy in front of it, at `http://localhost:5000/api` (the port comes from the `PORT` env var, `5000` by default — see `.env.example`). Both reach the same server; use whichever matches what you have running. All endpoints below are relative to whichever base URL you're using.
 
 ## Authentication
 
@@ -53,7 +55,31 @@ Liveness check. No authentication required.
 **Example**
 
 ```bash
-curl http://localhost:5000/api/health
+curl http://localhost:3000/api/health
+```
+
+---
+
+## `POST /api/test-email`
+
+Email configuration health check. Sends a real test email to `ADMIN_EMAIL` so you can confirm `EMAIL_USER`/`EMAIL_PASS` actually work. **Requires authentication.**
+
+**Success Response `200`**
+
+```json
+{ "success": true, "message": "Test email sent to leads@veridianglobal.com" }
+```
+
+If a test email was already sent within the last 5 minutes (see the rate-limit note on `emailService`), the request still succeeds but nothing new is sent:
+
+```json
+{ "success": true, "skipped": true, "message": "Skipped - a test email was already sent to leads@veridianglobal.com within the last 5 minutes." }
+```
+
+**Example**
+
+```bash
+curl -X POST "http://localhost:3000/api/test-email?key=$ADMIN_KEY"
 ```
 
 ---
@@ -128,7 +154,7 @@ Content-Type: application/json
 **Example**
 
 ```bash
-curl -X POST http://localhost:5000/api/submit-lead \
+curl -X POST http://localhost:3000/api/submit-lead \
   -H "Content-Type: application/json" \
   -d '{
     "fullName": "John Doe",
@@ -174,7 +200,7 @@ Lists leads. **Requires authentication.**
 **Example**
 
 ```bash
-curl "http://localhost:5000/api/leads?key=$ADMIN_KEY&status=New&limit=20"
+curl "http://localhost:3000/api/leads?key=$ADMIN_KEY&status=New&limit=20"
 ```
 
 ---
@@ -198,7 +224,7 @@ Fetches a single lead by id. **Requires authentication.**
 **Example**
 
 ```bash
-curl "http://localhost:5000/api/leads/1?key=$ADMIN_KEY"
+curl "http://localhost:3000/api/leads/1?key=$ADMIN_KEY"
 ```
 
 ---
@@ -231,7 +257,7 @@ Returns lead counts grouped by status. **Requires authentication.**
 **Example**
 
 ```bash
-curl "http://localhost:5000/api/leads/stats?key=$ADMIN_KEY"
+curl "http://localhost:3000/api/leads/stats?key=$ADMIN_KEY"
 ```
 
 ---
@@ -273,7 +299,7 @@ Updates a lead's status. **Requires authentication.**
 **Example**
 
 ```bash
-curl -X PATCH "http://localhost:5000/api/leads/1/status?key=$ADMIN_KEY" \
+curl -X PATCH "http://localhost:3000/api/leads/1/status?key=$ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "status": "Contacted" }'
 ```
@@ -305,7 +331,7 @@ Soft-deletes a lead by setting its status to `Archived`. **Requires authenticati
 **Example**
 
 ```bash
-curl -X DELETE "http://localhost:5000/api/leads/1?key=$ADMIN_KEY"
+curl -X DELETE "http://localhost:3000/api/leads/1?key=$ADMIN_KEY"
 ```
 
 ---
@@ -327,7 +353,7 @@ Sends the 5-question pre-vetting questionnaire. **Requires authentication.** Adv
 **Example**
 
 ```bash
-curl -X POST "http://localhost:5000/api/leads/1/pre-vetting-email?key=$ADMIN_KEY"
+curl -X POST "http://localhost:3000/api/leads/1/pre-vetting-email?key=$ADMIN_KEY"
 ```
 
 ### `POST /leads/:id/scheduling-email`
@@ -345,7 +371,7 @@ Proposes consultation time slots. **Requires authentication.** Does **not** chan
 **Example**
 
 ```bash
-curl -X POST "http://localhost:5000/api/leads/1/scheduling-email?key=$ADMIN_KEY" \
+curl -X POST "http://localhost:3000/api/leads/1/scheduling-email?key=$ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "slots": ["Tue Aug 12, 2pm ET", "Wed Aug 13, 10am ET"], "platform": "Zoom" }'
 ```
@@ -359,7 +385,7 @@ The PDF is read from `src/documents/engagement-letter-template.pdf`, which is **
 **Example**
 
 ```bash
-curl -X POST "http://localhost:5000/api/leads/1/engagement-letter-email?key=$ADMIN_KEY"
+curl -X POST "http://localhost:3000/api/leads/1/engagement-letter-email?key=$ADMIN_KEY"
 ```
 
 ### `POST /leads/:id/follow-up-email`
@@ -375,7 +401,7 @@ Sends a gentle follow-up. **Requires authentication.** Does not change status.
 **Example**
 
 ```bash
-curl -X POST "http://localhost:5000/api/leads/1/follow-up-email?key=$ADMIN_KEY" \
+curl -X POST "http://localhost:3000/api/leads/1/follow-up-email?key=$ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "message": "Just checking in ahead of your consultation next week." }'
 ```
@@ -400,7 +426,7 @@ Returns the full communication history for a lead, newest first. **Requires auth
 **Example**
 
 ```bash
-curl "http://localhost:5000/api/leads/1/communications?key=$ADMIN_KEY"
+curl "http://localhost:3000/api/leads/1/communications?key=$ADMIN_KEY"
 ```
 
 ### `POST /leads/:id/communications`
@@ -419,7 +445,7 @@ Manually logs a communication that happened outside the app — most commonly a 
 **Example**
 
 ```bash
-curl -X POST "http://localhost:5000/api/leads/1/communications?key=$ADMIN_KEY" \
+curl -X POST "http://localhost:3000/api/leads/1/communications?key=$ADMIN_KEY" \
   -H "Content-Type: application/json" \
   -d '{ "type": "incoming", "subject": "Re: Consultation Confirmation", "content": "Tuesday 2pm works for me." }'
 ```

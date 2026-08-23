@@ -9,7 +9,9 @@ const config = require('./config');
 const database = require('./config/database');
 const logger = require('./utils/logger');
 const leadRoutes = require('./routes/leadRoutes');
-const { leadSubmissionLimiter } = require('./middleware/rateLimiter');
+const emailService = require('./services/emailService');
+const { authenticateAdmin } = require('./middleware/auth');
+const { leadSubmissionLimiter, emailLimiter } = require('./middleware/rateLimiter');
 const requestLogger = require('./middleware/requestLogger');
 
 // Environment check: config.env only becomes 'production' if NODE_ENV was
@@ -77,6 +79,29 @@ app.get('/', (req, res) => {
 // GET /api/health - liveness check for uptime monitors / load balancers.
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// POST /api/test-email - email configuration health check. Protected (sends a
+// real email, so it shouldn't be public) and rate-limited like the other
+// email-sending routes. Sends a real test message to ADMIN_EMAIL so you can
+// confirm EMAIL_USER/EMAIL_PASS actually work - after a fresh deploy or a
+// credential rotation - without needing to submit a whole fake lead just to
+// trigger sendClientConfirmation.
+app.post('/api/test-email', authenticateAdmin, emailLimiter, async (req, res) => {
+  try {
+    const info = await emailService.sendTestEmail(config.email.adminEmail);
+    if (!info) {
+      return res.status(200).json({
+        success: true,
+        skipped: true,
+        message: `Skipped - a test email was already sent to ${config.email.adminEmail} within the last 5 minutes.`,
+      });
+    }
+    return res.status(200).json({ success: true, message: `Test email sent to ${config.email.adminEmail}` });
+  } catch (err) {
+    logger.error(`Failed to send test email: ${err.message}`);
+    return res.status(500).json({ success: false, error: 'Failed to send test email', message: err.message });
+  }
 });
 
 // Catch-all for any request that didn't match a route above.

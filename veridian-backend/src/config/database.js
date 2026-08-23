@@ -77,7 +77,7 @@ const CREATE_COMMUNICATIONS_TABLE = `
     subject TEXT,
     content TEXT,
     sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (lead_id) REFERENCES leads(id)
+    FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
   )
 `;
 

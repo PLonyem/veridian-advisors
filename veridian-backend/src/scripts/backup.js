@@ -63,16 +63,22 @@ async function runBackup() {
     ensureBackupsDir();
 
     // No filters and a limit far beyond any realistic table size = "all leads".
-    const leads = await leadService.getAllLeads({ limit: Number.MAX_SAFE_INTEGER, offset: 0 });
+    const [leads, communications] = await Promise.all([
+      leadService.getAllLeads({ limit: Number.MAX_SAFE_INTEGER, offset: 0 }),
+      leadService.getAllCommunications(),
+    ]);
     const backupData = {
       exportedAt: new Date().toISOString(),
       version: BACKUP_FORMAT_VERSION,
       count: leads.length,
       leads,
+      communications,
     };
 
     const filePath = writeBackupFile(backupData);
-    logger.info(`backup: exported ${backupData.count} lead(s) to ${filePath}`);
+    logger.info(
+      `backup: exported ${backupData.count} lead(s) and ${communications.length} communication(s) to ${filePath}`,
+    );
 
     // Compression and retention cleanup are best-effort extras: the JSON backup
     // above already succeeded, so a failure here shouldn't fail the whole run.

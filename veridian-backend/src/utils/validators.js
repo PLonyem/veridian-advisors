@@ -175,10 +175,50 @@ function validateLeadPayload(payload = {}) {
   };
 }
 
+const PRE_VETTING_FIELDS = ['country', 'netWorth', 'sourceOfFunds', 'criminalRecord', 'tierInterest'];
+
+/**
+ * Validates answers to the 5-question pre-vetting questionnaire sent by
+ * emailService.sendPreVettingEmail (country, net worth, source of funds,
+ * criminal record, tier interest). All 5 must be present and not empty;
+ * netWorth and tierInterest are additionally checked against the same
+ * enums used for the initial intake form, since they should stay consistent
+ * with what the lead originally submitted.
+ *
+ * @param {Object} answers
+ * @param {string} answers.country
+ * @param {string} answers.netWorth
+ * @param {string} answers.sourceOfFunds
+ * @param {string} answers.criminalRecord
+ * @param {string} answers.tierInterest
+ * @returns {{ valid: boolean, errors: string[] }}
+ */
+function validatePreVettingAnswers(answers = {}) {
+  const { netWorth, tierInterest } = answers;
+
+  const { errors } = validateRequiredFields(answers, PRE_VETTING_FIELDS);
+
+  if (netWorth !== undefined && netWorth !== null && String(netWorth).trim().length > 0 && !validateNetWorth(netWorth)) {
+    errors.push(`netWorth must be one of: ${NET_WORTH_OPTIONS.join(', ')} (received: "${netWorth}")`);
+  }
+
+  if (
+    tierInterest !== undefined &&
+    tierInterest !== null &&
+    String(tierInterest).trim().length > 0 &&
+    !validateTierInterest(tierInterest)
+  ) {
+    errors.push(`tierInterest must be one of: ${TIER_INTEREST_OPTIONS.join(', ')} (received: "${tierInterest}")`);
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
 module.exports = {
   NET_WORTH_OPTIONS,
   TIER_INTEREST_OPTIONS,
   LEAD_STATUS_OPTIONS,
+  PRE_VETTING_FIELDS,
   validateEmail,
   validateRequiredFields,
   validateNetWorth,
@@ -186,4 +226,5 @@ module.exports = {
   validateLeadStatus,
   sanitizeInput,
   validateLeadPayload,
+  validatePreVettingAnswers,
 };
