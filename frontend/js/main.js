@@ -108,6 +108,52 @@
   }
 
   /* ------------------------------------------------------------------
+     Premium Notifications
+     ------------------------------------------------------------------ */
+
+  var toastRegion;
+
+  function getToastRegion() {
+    if (toastRegion) return toastRegion;
+    toastRegion = document.createElement('div');
+    toastRegion.className = 'toast-region';
+    toastRegion.setAttribute('aria-label', 'Notifications');
+    toastRegion.setAttribute('aria-live', 'polite');
+    document.body.appendChild(toastRegion);
+    return toastRegion;
+  }
+
+  function showToast(message, type) {
+    var region = getToastRegion();
+    var toast = document.createElement('div');
+    var messageEl = document.createElement('p');
+    var closeButton = document.createElement('button');
+    var dismissTimer;
+
+    toast.className = 'toast toast--' + (type || 'info');
+    toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+    messageEl.className = 'toast__message';
+    messageEl.textContent = message;
+    closeButton.className = 'toast__close';
+    closeButton.type = 'button';
+    closeButton.setAttribute('aria-label', 'Dismiss notification');
+    closeButton.textContent = '\u00d7';
+    toast.appendChild(messageEl);
+    toast.appendChild(closeButton);
+    region.appendChild(toast);
+
+    function dismiss() {
+      window.clearTimeout(dismissTimer);
+      toast.classList.remove('is-visible');
+      window.setTimeout(function () { toast.remove(); }, prefersReducedMotion ? 0 : 320);
+    }
+
+    closeButton.addEventListener('click', dismiss);
+    window.requestAnimationFrame(function () { toast.classList.add('is-visible'); });
+    dismissTimer = window.setTimeout(dismiss, 5000);
+  }
+
+  /* ------------------------------------------------------------------
      Form Handling
      ------------------------------------------------------------------ */
 
@@ -231,6 +277,7 @@
       }
       messageBox.textContent = text;
       messageBox.hidden = !text;
+      if (text) showToast(text, 'error');
     }
 
     function setLoading(loading) {
@@ -304,7 +351,7 @@
           if (result.ok) {
             showSuccess();
             window.setTimeout(function () {
-              window.location.href = '/thank-you.html';
+              window.location.href = '/thank-you';
             }, 800);
             return;
           }
@@ -504,7 +551,7 @@
     revealEls.forEach(function (el) {
       var parent = el.parentElement;
       var index = staggerCounters.get(parent) || 0;
-      el.style.transitionDelay = Math.min(index * 90, 450) + 'ms';
+      el.style.transitionDelay = Math.min(index * 80, 400) + 'ms';
       staggerCounters.set(parent, index + 1);
     });
 
