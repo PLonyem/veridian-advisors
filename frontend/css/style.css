@@ -537,6 +537,14 @@ small,
   margin-bottom: var(--spacing-lg);
 }
 
+.form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .form-label {
   display: block;
   margin-bottom: var(--spacing-xs);

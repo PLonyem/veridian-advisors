@@ -55,17 +55,9 @@
  * real image. The <noscript> tag renders its own plain <img> instead in
  * that case, bypassing the lazy-load markup entirely.
  *
- * IMPORTANT — a real gap this revealed, not fixed here (out of scope for a
- * JS-only file, and it'd change an already-tested backend contract): the
- * backend's disclaimer check is `disclaimer_accepted !== true` (a strict
- * boolean). A vanilla HTML checkbox submitted via a no-JS <form> POST can
- * only ever send the string "on" (checked) or omit the field entirely
- * (unchecked) — never a real boolean. That means the <noscript> fallback
- * path (form action="/api/submit-lead", no JS) will ALWAYS get rejected
- * with "You must accept the disclaimer", even when the box is checked.
- * Everything else in the form degrades correctly without JS; this one field
- * doesn't, and fixing it requires a backend change (accept "on"/"true" as
- * well as boolean true), not just something we can do here of the client.
+ * Intake submission requires JavaScript because the API deliberately accepts
+ * strict JSON booleans and an idempotency header rather than ambiguous native
+ * form encoding. The page content remains available without JavaScript.
  */
 (function () {
   'use strict';
@@ -76,6 +68,8 @@
   // own feature, not the whole file.
   var supportsIntersectionObserver = 'IntersectionObserver' in window;
   var supportsFetch = 'fetch' in window;
+  var currentNoticeVersion = '';
+  var submissionKey = createSubmissionKey();
   var prefersReducedMotion =
     'matchMedia' in window && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -98,6 +92,43 @@
         fn.apply(context, args);
       }, wait);
     };
+  }
+
+  function createSubmissionKey() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    return 'intake-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+  }
+
+  function initPublicConfig() {
+    if (!supportsFetch) return;
+    fetch('/api/v1/public-config', { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Public configuration unavailable');
+        return response.json();
+      })
+      .then(function (config) {
+        currentNoticeVersion = config.noticeVersion;
+        var notice = document.getElementById('intake-notice-version');
+        if (notice) notice.textContent = ' (version ' + currentNoticeVersion + ')';
+        (config.packages || []).forEach(function (servicePackage) {
+          document.querySelectorAll('[data-package-code="' + servicePackage.code + '"]').forEach(function (element) {
+            var amount = Math.round(servicePackage.priceMinor / 100);
+            element.setAttribute('data-counter', String(amount));
+            element.textContent = amount.toLocaleString('en-US');
+          });
+        });
+      })
+      .catch(function () {
+        var submitButton = document.querySelector('#intake-form button[type="submit"]');
+        var messageBox = document.getElementById('form-message');
+        if (submitButton) submitButton.disabled = true;
+        if (messageBox) {
+          messageBox.textContent = 'Current service information is temporarily unavailable. Please try again later.';
+          messageBox.hidden = false;
+        }
+      });
   }
 
   function scrollToTarget(target) {
@@ -157,9 +188,7 @@
      Form Handling
      ------------------------------------------------------------------ */
 
-  // Mirrors src/utils/validators.js exactly, so a field that passes here
-  // will also pass on the server - no "client says fine, server rejects"
-  // surprises.
+  // Mirrors the bounded fields in veridian-backend/src/domain/schemas.ts.
   var EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   var FIELD_VALIDATORS = {
@@ -306,13 +335,12 @@
     }
 
     form.addEventListener('submit', function (event) {
-      // No fetch support (very old browser) - let the <form>'s own
-      // method="POST" action="/api/submit-lead" handle it natively. The
-      // server accepts both JSON and urlencoded bodies, so this works
-      // (see the disclaimer-checkbox caveat at the top of this file).
-      if (!supportsFetch) return;
-
       event.preventDefault();
+
+      if (!supportsFetch || !currentNoticeVersion) {
+        showFormMessage('Current service information is still loading. Please try again shortly.');
+        return;
+      }
 
       // Guard against double submission from a double-click or a second
       // Enter-key press landing before `disabled` takes visual effect.
@@ -330,11 +358,15 @@
 
       var formData = new FormData(form);
       var data = Object.fromEntries(formData.entries());
+      data.netWorthRange = data.netWorth;
+      delete data.netWorth;
       data.disclaimerAccepted = data.disclaimerAccepted === 'on';
+      data.marketingConsent = data.marketingConsent === 'on';
+      data.noticeVersion = currentNoticeVersion;
 
       fetch(form.getAttribute('action') || '/api/submit-lead', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': submissionKey },
         body: JSON.stringify(data),
       })
         .then(function (response) {
@@ -357,11 +389,16 @@
           }
 
           if (result.status === 429) {
-            showFormMessage(result.body.message || 'Too many attempts. Please try again later.');
-          } else if (result.body && Array.isArray(result.body.details)) {
-            showFormMessage(result.body.details.join(' '));
-          } else if (result.body && result.body.error) {
-            showFormMessage(result.body.error);
+            showFormMessage((result.body.error && result.body.error.message) || 'Too many attempts. Please try again later.');
+          } else if (result.body.error && result.body.error.fieldErrors) {
+            var fieldErrors = result.body.error.fieldErrors;
+            Object.keys(fieldErrors).forEach(function (serverName) {
+              var fieldName = serverName === 'netWorthRange' ? 'netWorth' : serverName;
+              if (fields[fieldName]) setFieldError(fields[fieldName], fieldErrors[serverName].join(' '));
+            });
+            showFormMessage(Object.values(fieldErrors).flat().join(' '));
+          } else if (result.body.error && result.body.error.message) {
+            showFormMessage(result.body.error.message);
           } else {
             showFormMessage('Something went wrong. Please try again.');
           }
@@ -369,8 +406,7 @@
           isSubmitting = false;
           resetButton();
         })
-        .catch(function (error) {
-          console.error('Network error submitting lead form:', error);
+        .catch(function () {
           showFormMessage('Network error. Please check your connection and try again.');
           isSubmitting = false;
           resetButton();
@@ -850,6 +886,7 @@
      ------------------------------------------------------------------ */
 
   function init() {
+    initPublicConfig();
     initFormHandling();
     initNavigation();
     initScrollReveal();

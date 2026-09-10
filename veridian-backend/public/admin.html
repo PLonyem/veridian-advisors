@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Veridian Staff</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/admin-extra.css"></head>
+<body class="admin-body">
+  <header class="site-header"><a class="brand" href="/">VERIDIAN <span>STAFF OPERATIONS</span></a><nav><button id="logout" class="link-button hidden">Sign out</button></nav></header>
+  <main class="admin-main">
+    <section id="login-panel" class="auth-card"><p class="eyebrow">Protected staff access</p><h1>Sign in</h1><form id="login-form"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" minlength="12" required></label><button class="button">Continue</button></form><div id="login-error" class="error" role="alert"></div></section>
+    <section id="mfa-panel" class="auth-card hidden"><p class="eyebrow">Second factor</p><h1>Enter your code</h1><form id="mfa-form"><label>Authenticator or recovery code<input name="code" inputmode="numeric" autocomplete="one-time-code" required></label><button class="button">Verify</button></form><div id="mfa-error" class="error" role="alert"></div></section>
+    <section id="enroll-panel" class="auth-card hidden"><p class="eyebrow">Security setup</p><h1>Enroll MFA</h1><p>Production data remains locked until MFA is enrolled.</p><form id="enroll-form"><label>Confirm password<input name="password" type="password" autocomplete="current-password" required></label><button class="button">Create authenticator secret</button></form><pre id="enroll-details" class="secret-box hidden"></pre><form id="enroll-verify-form" class="hidden"><label>Authenticator code<input name="code" inputmode="numeric" autocomplete="one-time-code" required></label><button class="button">Complete enrollment</button></form><div id="enroll-error" class="error" role="alert"></div></section>
+    <section id="dashboard" class="hidden">
+      <div class="dashboard-heading"><div><p class="eyebrow">Lead operations</p><h1>Dashboard</h1><p id="staff-summary" class="muted"></p></div><button id="refresh" class="button secondary">Refresh</button></div>
+      <div id="global-error" class="error" role="alert"></div>
+      <div id="stats" class="stats" aria-label="Pipeline counts"></div>
+      <div class="admin-grid"><section class="panel"><div class="panel-heading"><h2>Leads</h2><form id="search-form"><input name="search" type="search" placeholder="Search name or email"><button class="button small">Search</button></form></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Tier</th><th>Stage</th><th>Updated</th></tr></thead><tbody id="lead-rows"></tbody></table></div><p id="empty-leads" class="muted hidden">No leads match this view.</p></section>
+      <aside id="lead-detail" class="panel detail"><p class="muted">Choose a lead to view its details.</p></aside></div>
+      <section id="reconciliation" class="panel owner-ops hidden"></section>
+      <section id="owner-ops" class="panel owner-ops hidden"></section>
+    </section>
+  </main>
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>

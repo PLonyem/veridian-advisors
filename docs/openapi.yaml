@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: Veridian Lead Management API
+  version: 1.0.0
+  description: Private consultancy enquiry-to-onboarding API. Better Auth owns routes under /api/auth.
+servers:
+  - url: http://localhost:5000
+paths:
+  /health/live:
+    get:
+      summary: Process liveness
+      responses:
+        '200': { description: Live, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+  /health/ready:
+    get:
+      summary: Database and schema readiness
+      responses:
+        '200': { description: Ready, content: { application/json: { schema: { $ref: '#/components/schemas/Health' } } } }
+        '500': { $ref: '#/components/responses/Error' }
+  /api/v1/enquiries:
+    post:
+      summary: Submit a public enquiry
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/Enquiry' } } } }
+      responses:
+        '202': { description: Durable generic receipt }
+        '400': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
+  /api/v1/public-config:
+    get:
+      summary: Current intake notice and active package pricing
+      responses:
+        '200': { description: Public configuration, content: { application/json: { schema: { $ref: '#/components/schemas/PublicConfig' } } } }
+        '503': { $ref: '#/components/responses/Error' }
+  /api/submit-lead:
+    post:
+      summary: Compatibility alias using the same enquiry service
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/Enquiry' } } } }
+      responses: { '202': { description: Durable generic receipt }, '400': { $ref: '#/components/responses/Error' } }
+  /api/v1/admin/session:
+    get: { summary: Current authorized staff profile, security: [ { sessionCookie: [] } ], responses: { '200': { description: Session }, '401': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/leads:
+    get:
+      summary: Scoped paginated leads
+      security: [ { sessionCookie: [] } ]
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100 } }
+        - { name: search, in: query, schema: { type: string, maxLength: 120 } }
+        - { name: stage, in: query, schema: { $ref: '#/components/schemas/LeadStage' } }
+      responses: { '200': { description: Scoped page }, '401': { $ref: '#/components/responses/Error' } }
+  /api/v1/admin/leads/stats:
+    get: { summary: Scoped pipeline counts with a date filter, security: [ { sessionCookie: [] } ], responses: { '200': { description: Counts } } }
+  /api/v1/admin/leads/{id}:
+    parameters: [ { $ref: '#/components/parameters/Id' } ]
+    get: { summary: Role-filtered lead detail, security: [ { sessionCookie: [] } ], responses: { '200': { description: Lead detail }, '404': { $ref: '#/components/responses/Error' } } }
+    patch:
+      summary: Update allowed lead fields with optimistic version
+      security: [ { sessionCookie: [] } ]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [expectedVersion], properties: { expectedVersion: { type: integer }, fullName: { type: string }, email: { type: string, format: email }, country: { type: string }, assignedStaffId: { type: [string, 'null'] }, tierInterest: { $ref: '#/components/schemas/Tier' } }, additionalProperties: false } } } }
+      responses: { '200': { description: Updated }, '409': { $ref: '#/components/responses/Error' } }
+  /api/v1/admin/leads/{id}/notes:
+    post: { summary: Add encrypted private note, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '201': { description: Created }, '403': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/leads/{id}/transitions:
+    post: { summary: Perform an allowed manual transition, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Updated }, '409': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/leads/{id}/archive:
+    post: { summary: Archive and cancel discretionary queue, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Archived } } }
+  /api/v1/admin/leads/{id}/restore:
+    post: { summary: Restore visibility without changing stage, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Restored } } }
+  /api/v1/admin/leads/{id}/communications:
+    get: { summary: Scoped communication and attempt history, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: History } } }
+  /api/v1/admin/enquiries:
+    get: { summary: Reconciliation-pending enquiries, security: [ { sessionCookie: [] } ], responses: { '200': { description: Enquiries } } }
+  /api/v1/admin/enquiries/{id}/reconcile:
+    post: { summary: Link an enquiry without overwriting the lead, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Reconciled }, '409': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/leads/{id}/pre-vetting/send:
+    post: { summary: Queue approved five-question outreach, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' } ], responses: { '202': { description: Queued } } }
+  /api/v1/admin/leads/{id}/qualification:
+    put: { summary: Record structured mailbox reply summary, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Recorded } } }
+  /api/v1/admin/leads/{id}/qualification/review:
+    post: { summary: Human service-fit decision, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Reviewed }, '409': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/leads/{id}/follow-ups:
+    post: { summary: Queue previewed staff-authored follow-up, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' } ], responses: { '202': { description: Queued } } }
+  /api/v1/admin/leads/{id}/engagements:
+    post: { summary: Create a final quote and engagement record, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '201': { description: Created } } }
+  /api/v1/admin/engagements/{id}/document:
+    post: { summary: Upload and scan a bounded PDF, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], requestBody: { required: true, content: { multipart/form-data: { schema: { type: object, required: [expectedVersion, document], properties: { expectedVersion: { type: integer }, type: { type: string, enum: [ENGAGEMENT, SIGNED_ENGAGEMENT] }, document: { type: string, format: binary } } } } } }, responses: { '201': { description: Stored }, '413': { $ref: '#/components/responses/Error' }, '415': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/engagements/{id}/send:
+    post: { summary: Queue exact approved engagement PDF, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' }, { $ref: '#/components/parameters/IdempotencyKey' } ], responses: { '202': { description: Queued } } }
+  /api/v1/admin/engagements/{id}/record-signature:
+    post: { summary: Record external signature evidence, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Recorded } } }
+  /api/v1/admin/engagements/{id}/payments:
+    post: { summary: Record externally confirmed payment without charging, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '201': { description: Recorded } } }
+  /api/v1/admin/leads/{id}/convert:
+    post: { summary: Mark onboarding complete after evidence guards, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Converted }, '409': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/documents/{id}/download:
+    get: { summary: Authorize 60-second private download, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Signed URL }, '403': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/staff:
+    get: { summary: Owner-only staff list, security: [ { sessionCookie: [] } ], responses: { '200': { description: Staff }, '403': { $ref: '#/components/responses/Error' } } }
+    post: { summary: Owner-only staff provisioning, security: [ { sessionCookie: [] } ], responses: { '201': { description: Created }, '403': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/staff/{id}/disable:
+    post: { summary: Disable user and revoke sessions, security: [ { sessionCookie: [] } ], parameters: [ { name: id, in: path, required: true, schema: { type: string } } ], responses: { '200': { description: Disabled } } }
+  /api/v1/admin/email/health:
+    get: { summary: Owner-only redacted queue/provider health, security: [ { sessionCookie: [] } ], responses: { '200': { description: Health } } }
+  /api/v1/admin/email/test:
+    post: { summary: Owner-only send to configured test recipient, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ], responses: { '202': { description: Queued } } }
+  /api/v1/admin/communications/{id}/retry:
+    post: { summary: Authorized failed-message retry, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '202': { description: Queued } } }
+  /api/v1/admin/communications/{id}/cancel:
+    post: { summary: Authorized queued-message cancellation, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Cancelled } } }
+  /api/v1/admin/privacy-requests:
+    post: { summary: Owner records a privacy request, security: [ { sessionCookie: [] } ], responses: { '201': { description: Recorded } } }
+  /api/v1/admin/privacy-requests/{id}/review:
+    post: { summary: Owner records identity review and hold, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Reviewed } } }
+  /api/v1/admin/privacy-requests/{id}/execute:
+    post: { summary: Execute reviewed archive, withdrawal, export, or erasure, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: Completed }, '409': { $ref: '#/components/responses/Error' } } }
+  /api/v1/admin/privacy-exports/{id}:
+    get: { summary: Owner downloads one-time expiring subject export, security: [ { sessionCookie: [] } ], parameters: [ { $ref: '#/components/parameters/Id' } ], responses: { '200': { description: JSON export }, '404': { $ref: '#/components/responses/Error' } } }
+  /api/webhooks/resend:
+    post: { summary: Signed raw-body Resend event, responses: { '200': { description: Processed or duplicate }, '400': { $ref: '#/components/responses/Error' } } }
+components:
+  securitySchemes:
+    sessionCookie: { type: apiKey, in: cookie, name: veridian.session_token }
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 16, maxLength: 128 } }
+  schemas:
+    Health: { type: object, required: [status], properties: { status: { type: string, enum: [live, ready] } } }
+    LeadStage: { type: string, enum: [NEW, CONTACTED, QUALIFICATION_PENDING, QUALIFIED, ENGAGEMENT_SENT, SIGNED, CONVERTED, REJECTED] }
+    Tier: { type: string, enum: [FOUNDATION, ACCELERATED, EXECUTIVE, NOT_SURE] }
+    PublicConfig:
+      type: object
+      required: [noticeVersion, communicationPolicy, packages]
+      properties:
+        noticeVersion: { type: string }
+        communicationPolicy: { type: string, enum: [EMAIL_ONLY] }
+        packages:
+          type: array
+          items:
+            type: object
+            required: [code, displayName, priceMinor, currency, isStartingPrice]
+            properties:
+              code: { type: string, enum: [FOUNDATION, ACCELERATED, EXECUTIVE] }
+              displayName: { type: string }
+              priceMinor: { type: integer, minimum: 0 }
+              currency: { type: string, pattern: '^[A-Z]{3}$' }
+              isStartingPrice: { type: boolean }
+    Enquiry:
+      type: object
+      additionalProperties: false
+      required: [fullName, email, country, netWorthRange, tierInterest, disclaimerAccepted, noticeVersion]
+      properties:
+        fullName: { type: string, minLength: 2, maxLength: 120 }
+        email: { type: string, format: email, maxLength: 254 }
+        country: { type: string, minLength: 2, maxLength: 100 }
+        netWorthRange: { type: string, enum: ['$1M–$5M', '$1M-$5M', '$5M–$20M', '$5M-$20M', '$20M+', USD_1M_5M, USD_5M_20M, USD_20M_PLUS] }
+        tierInterest: { type: string, enum: [Foundation, Accelerated, Executive, 'Not sure', FOUNDATION, ACCELERATED, EXECUTIVE, NOT_SURE] }
+        disclaimerAccepted: { type: boolean, const: true }
+        noticeVersion: { type: string }
+        marketingConsent: { type: boolean, default: false }
+        website: { type: string, maxLength: 0 }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, requestId]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            requestId: { type: string }
+            fieldErrors: { type: object, additionalProperties: { type: array, items: { type: string } } }
+  responses:
+    Error: { description: Safe error envelope, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }

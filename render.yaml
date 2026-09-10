@@ -1,0 +1,138 @@
+services:
+  - type: web
+    name: veridian-api
+    runtime: node
+    plan: 0.5c-512mb
+    rootDir: veridian-backend
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run db:migrate
+    startCommand: npm start
+    healthCheckPath: /health/ready
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: MIGRATION_DATABASE_URL
+        fromDatabase:
+          name: veridian-postgres
+          property: connectionString
+      - key: DATABASE_URL
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: DATA_ENCRYPTION_KEYS
+        sync: false
+      - key: BACKUP_ENCRYPTION_KEY
+        sync: false
+      - key: RATE_LIMIT_HMAC_KEY
+        generateValue: true
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: ADMIN_APP_URL
+        sync: false
+      - key: API_BASE_URL
+        sync: false
+      - key: TRUSTED_ORIGINS
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: MONITORED_REPLY_TO
+        sync: false
+      - key: STAFF_NOTIFICATION_EMAIL
+        sync: false
+      - key: EMAIL_TEST_RECIPIENT
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: SCANNER_ADAPTER
+        value: clamav
+      - key: CLAMAV_HOST
+        sync: false
+      - key: CLAMAV_PORT
+        sync: false
+  - type: worker
+    name: veridian-email-worker
+    runtime: node
+    plan: 0.5c-512mb
+    rootDir: veridian-backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:worker
+    maxShutdownDelaySeconds: 90
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: MIGRATION_DATABASE_URL
+        fromDatabase:
+          name: veridian-postgres
+          property: connectionString
+      - key: BETTER_AUTH_SECRET
+        sync: false
+      - key: DATA_ENCRYPTION_KEYS
+        sync: false
+      - key: BACKUP_ENCRYPTION_KEY
+        sync: false
+      - key: RATE_LIMIT_HMAC_KEY
+        sync: false
+      - key: PUBLIC_SITE_URL
+        sync: false
+      - key: ADMIN_APP_URL
+        sync: false
+      - key: API_BASE_URL
+        sync: false
+      - key: TRUSTED_ORIGINS
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: MONITORED_REPLY_TO
+        sync: false
+      - key: STAFF_NOTIFICATION_EMAIL
+        sync: false
+      - key: EMAIL_TEST_RECIPIENT
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: SCANNER_ADAPTER
+        value: clamav
+      - key: CLAMAV_HOST
+        sync: false
+      - key: CLAMAV_PORT
+        sync: false
+databases:
+  - name: veridian-postgres
+    databaseName: veridian
+    user: veridian_migrator
+    plan: 0.5c-1g
+    postgresMajorVersion: "17"
+    ipAllowList: []

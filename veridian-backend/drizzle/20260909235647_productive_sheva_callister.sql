@@ -1,0 +1,2 @@
+ALTER TABLE "leads" ALTER COLUMN "net_worth_range" DROP NOT NULL;--> statement-breakpoint
+ALTER TABLE "engagements" ADD CONSTRAINT "engagement_package_selected" CHECK ("engagements"."package_code" <> 'NOT_SURE');

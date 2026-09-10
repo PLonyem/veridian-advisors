@@ -301,7 +301,7 @@
         <div class="grid grid--3 mt-xl">
           <article class="card pricing-card reveal">
             <span class="eyebrow">Foundation</span>
-            <p class="pricing-card__price">$<span data-counter="7500" data-counter-duration="1200">7,500</span></p>
+            <p class="pricing-card__price">$<span data-package-code="FOUNDATION" data-counter="7500" data-counter-duration="1200">7,500</span></p>
             <p class="pricing-card__timeline">4–6 months</p>
             <p class="card__body pricing-card__body">For clients with time on their side. Full document preparation at our standard pace.</p>
             <div class="card__footer">
@@ -311,7 +311,7 @@
 
           <article class="card pricing-card pricing-card--featured reveal reveal--delay-1">
             <span class="eyebrow">Executive</span>
-            <p class="pricing-card__price">$<span data-counter="45000" data-counter-duration="1400">45,000</span><span class="pricing-card__price-suffix">+</span></p>
+            <p class="pricing-card__price">$<span data-package-code="EXECUTIVE" data-counter="45000" data-counter-duration="1400">45,000</span><span class="pricing-card__price-suffix">+</span></p>
             <p class="pricing-card__timeline">28-day guarantee</p>
             <p class="card__body pricing-card__body">White-glove service with a dedicated senior advisor and the fastest available timeline.</p>
             <div class="card__footer">
@@ -321,7 +321,7 @@
 
           <article class="card pricing-card reveal reveal--delay-2">
             <span class="eyebrow">Accelerated</span>
-            <p class="pricing-card__price">$<span data-counter="25000" data-counter-duration="1300">25,000</span></p>
+            <p class="pricing-card__price">$<span data-package-code="ACCELERATED" data-counter="25000" data-counter-duration="1300">25,000</span></p>
             <p class="pricing-card__timeline">6–8 weeks</p>
             <p class="card__body pricing-card__body">For clients who need to move quickly. Priority handling across every stage of preparation.</p>
             <div class="card__footer">
@@ -378,7 +378,7 @@
           <div class="gold-divider" style="margin-inline: 0;"></div>
           <span class="eyebrow">Confidential Review</span>
           <h2>Start Your Confidential Review</h2>
-          <p class="lede">Tell us a little about your situation. A senior advisor will follow up personally within 24 hours.</p>
+          <p class="lede">Tell us a little about your situation. Our team will review your enquiry and follow up by email where appropriate.</p>
           <p class="text-small mt-lg">Private advisory services. Not a law firm. No guarantees of outcome.</p>
         </div>
 
@@ -387,6 +387,11 @@
             <input class="form-control" type="text" id="fullName" name="fullName" autocomplete="name" placeholder=" " required>
             <label class="form-label form-label--floating" for="fullName">Full Name</label>
             <span class="form-error" id="fullName-error" role="alert"></span>
+          </div>
+
+          <div class="form-honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
           </div>
 
           <div class="form-group form-group--floating">
@@ -427,9 +432,16 @@
           <div class="form-group">
             <label class="form-checkbox">
               <input type="checkbox" id="disclaimerAccepted" name="disclaimerAccepted" required>
-              <span class="text-small">I have read and accept the <a href="/legal.html" class="text-gold" target="_blank" rel="noopener">disclaimer and terms</a>. Veridian Global Advisors is not a law firm and this is not legal advice.</span>
+              <span class="text-small">I have read and accept the <a href="/legal.html" class="text-gold" target="_blank" rel="noopener">disclaimer, privacy notice, and terms</a><span id="intake-notice-version"></span>. Veridian Global Advisors is not a law firm and this is not legal advice.</span>
             </label>
             <span class="form-error" id="disclaimerAccepted-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox" id="marketingConsent" name="marketingConsent">
+              <span class="text-small">I separately agree to receive optional Veridian updates. This is not required for an enquiry.</span>
+            </label>
           </div>
 
           <div id="form-message" class="form-error" role="alert" hidden></div>

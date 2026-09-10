@@ -1,0 +1,15 @@
+{
+  "status": "DRAFT",
+  "approvedBy": null,
+  "approvedAt": null,
+  "automaticDeletionEnabled": false,
+  "categories": {
+    "expiredIdempotencyRecordsDays": 7,
+    "expiredRateLimitBucketsDays": 1,
+    "expiredSecretEmailPayloadsDays": 1,
+    "expiredPrivacyExportsDays": 1,
+    "archivedLeadRetentionDays": null,
+    "auditEventRetentionDays": null,
+    "documentRetentionDays": null
+  }
+}
